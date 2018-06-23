@@ -26,7 +26,7 @@ export function createKeysStream(): Observable<KeysStateInterface> {
     tap(event => event.preventDefault()),
     filter(event => allowedKeys.has(event.key)),
     groupBy(event => event.key),
-    map(group => group.pipe(distinctUntilChanged(null, e => e.type))),
+    map(group => group.pipe(distinctUntilChanged(null, event => event.type))),
     mergeAll(),
     scan((acc, event) => ({ ...acc, [event.key]: event.type === 'keydown' }), initialKeysState),
   );
