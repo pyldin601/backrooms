@@ -11,10 +11,10 @@ function reduce(game: GameStateInterface, keysState: KeysStateInterface): GameSt
     game.player.position.y -= .5;
   }
   if (keysState.ArrowLeft) {
-    game.player.position.x -= .5;
+    game.player.position.angle -= .01;
   }
   if (keysState.ArrowRight) {
-    game.player.position.x += .5;
+    game.player.position.angle += .01;
   }
   return game;
 }
