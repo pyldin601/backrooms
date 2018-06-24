@@ -23,3 +23,13 @@ export function rotatePoint(point: Point, center: Point, angle: number): Point {
     y: newPoint.y + center.y,
   };
 }
+
+export function movePoint(point: Point, amount: number, angle: number): Point {
+  const c = Math.cos(angle);
+  const s = Math.sin(angle);
+
+  return {
+    x: point.x - amount * s,
+    y: point.y + amount * c,
+  };
+}
