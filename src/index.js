@@ -1,13 +1,13 @@
 // @flow
-import { interval } from 'rxjs';
+import { interval, Scheduler } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import render from './game/render';
 import { createKeysStream } from './game/keys';
 import { takeSecond } from './util/projection';
 import { createGameReducer } from './game/reducer';
 
-const keys$ = createKeysStream();
-const generator$ = interval().pipe(withLatestFrom(keys$, takeSecond()));
+const generator$ = interval(Scheduler.requestAnimationFrame)
+  .pipe(withLatestFrom(createKeysStream(), takeSecond()));
 
 const canvas = document.getElementById('canvas-main');
 
