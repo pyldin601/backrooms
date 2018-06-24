@@ -2,8 +2,11 @@
   "name": "game",
   "version": "1.0.0",
   "description": "",
+  "homepage": "https://pldin601.github.io/game",
   "scripts": {
-    "start": "parcel public/index.html"
+    "start": "parcel public/index.html",
+    "build": "parcel build public/index.html",
+    "deploy": "gh-pages -b master -d dist"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +19,7 @@
   "devDependencies": {
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-0": "^6.24.1"
+    "babel-preset-stage-0": "^6.24.1",
+    "gh-pages": "^1.2.0"
   }
 }
