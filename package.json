@@ -5,8 +5,8 @@
   "homepage": "https://pldin601.github.io/game",
   "scripts": {
     "start": "parcel public/index.html",
-    "build": "parcel build public/index.html",
-    "deploy": "gh-pages -b master -d dist"
+    "build": "parcel build public/index.html --public-url ./",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
