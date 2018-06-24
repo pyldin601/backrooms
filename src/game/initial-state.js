@@ -1,11 +1,11 @@
 // @flow
-import type { GameInterface } from "./models";
+import type { GameStateInterface } from "./state";
 
-const initialState: GameInterface = {
+const initialState: GameStateInterface = {
   player: {
     position: {
-      x: 0,
-      y: 0,
+      x: 150,
+      y: 150,
       angle: 0.0,
     },
   },
