@@ -5,6 +5,7 @@
   "homepage": "https://pldin601.github.io/game",
   "scripts": {
     "start": "parcel public/index.html",
+    "prebuild": "rimraf dist/*",
     "build": "parcel build public/index.html --public-url ./",
     "deploy": "gh-pages -d dist"
   },
@@ -20,6 +21,7 @@
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
-    "gh-pages": "^1.2.0"
+    "gh-pages": "^1.2.0",
+    "rimraf": "^2.6.2"
   }
 }
