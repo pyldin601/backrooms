@@ -1,10 +1,7 @@
 // @flow
-import type { GameStateInterface, MapStateInterface, PlayerStateInterface } from './state';
-import { rotatePoint } from '../util/geometry';
-import type { Point } from '../util/geometry';
-
-const moveTo = (context, { x, y }: Point) => context.moveTo(x, y);
-const lineTo = (context, { x, y }: Point) => context.lineTo(x, y);
+import type { GameStateInterface } from '../state';
+import { rotatePoint } from '../../util/geometry';
+import { moveTo, lineTo } from '../../util/render';
 
 function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateInterface) {
   const { x, y, angle } = player.position;
@@ -22,7 +19,6 @@ function renderMap(context: CanvasRenderingContext2D, { map }: GameStateInterfac
   const path = new Path2D();
 
   map.walls.forEach(wall => {
-    console.log(wall);
     moveTo(path, { x: wall.x1, y: wall.y1 });
     lineTo(path, { x: wall.x2, y: wall.y2 });
   });

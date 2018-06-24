@@ -12,6 +12,10 @@ html, body {
     justify-content: center;
 }
 
+.canvas_wrap {
+    margin: 8px;
+}
+
 .canvas_item {
     width: 300px;
     height: 300px;
