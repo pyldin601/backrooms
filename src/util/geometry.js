@@ -35,8 +35,8 @@ export function movePoint(point: Point, amount: number, angle: number): Point {
   const s = Math.sin(angle);
 
   return {
-    x: point.x - amount * s,
-    y: point.y + amount * c,
+    x: point.x - amount * c,
+    y: point.y - amount * s,
   };
 }
 
