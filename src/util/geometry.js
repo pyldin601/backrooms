@@ -50,15 +50,15 @@ export function project3DPoint(point: Point3D, camera: Point3D, angle: number): 
   const cz = Math.cos(0);
   const sz = Math.sin(0);
 
-  const deltaPoint = {
+  const dp = {
     x: point.x - camera.x,
     y: point.y - camera.y,
     z: point.z - camera.z,
   };
 
-  const dx = cy * (sz * deltaPoint.y + cz * deltaPoint.x) - sy * deltaPoint.z;
-  const dy = sx * (cy * deltaPoint.z + sy * (sz * deltaPoint.y) + cz * deltaPoint.x) + sz * (cz * deltaPoint.y - sz * deltaPoint.x);
-  const dz = cx * (cy * deltaPoint.z + sy * (sz * deltaPoint.y) + cz * deltaPoint.x) - sx * (cz * deltaPoint.y - sz * deltaPoint.x);
+  const dx = cy * (sz * dp.y + cz * dp.x) - sy * dp.z;
+  const dy = sx * (cy * dp.z + sy * (sz * dp.y + cz * dp.x)) + sz * (cz * dp.y - sz * dp.x);
+  const dz = cx * (cy * dp.z + sy * (sz * dp.y + cz * dp.x)) - sx * (cz * dp.y - sz * dp.x);
 
   const ex = 150;
   const ey = 150;

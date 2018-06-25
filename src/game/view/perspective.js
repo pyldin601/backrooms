@@ -13,11 +13,11 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
   const path = new Path2D();
 
   map.walls.forEach(wall => {
-    moveTo(path, project3DPoint({ x: wall.x1, y: wall.y1, z: 0 }, { x, y, z }, angle));
-    lineTo(path, project3DPoint({ x: wall.x1, y: wall.y1, z: 300 }, { x, y, z }, angle));
-    lineTo(path, project3DPoint({ x: wall.x2, y: wall.y2, z: 300 }, { x, y, z }, angle));
-    lineTo(path, project3DPoint({ x: wall.x2, y: wall.y2, z: 0 }, { x, y, z }, angle));
-    lineTo(path, project3DPoint({ x: wall.x1, y: wall.y1, z: 0 }, { x, y, z }, angle));
+    moveTo(path, project3DPoint({ x: wall.x1, y: wall.y1, z: 140 }, { x, y, z }, angle));
+    lineTo(path, project3DPoint({ x: wall.x1, y: wall.y1, z: 160 }, { x, y, z }, angle));
+    lineTo(path, project3DPoint({ x: wall.x2, y: wall.y2, z: 160 }, { x, y, z }, angle));
+    lineTo(path, project3DPoint({ x: wall.x2, y: wall.y2, z: 140 }, { x, y, z }, angle));
+    lineTo(path, project3DPoint({ x: wall.x1, y: wall.y1, z: 140 }, { x, y, z }, angle));
   });
 
   context.strokeStyle = '#aabb00';
