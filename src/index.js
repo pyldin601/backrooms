@@ -20,14 +20,14 @@ if (
   transformedCanvas instanceof HTMLCanvasElement &&
   perspectiveCanvas instanceof HTMLCanvasElement
 ) {
-  absoluteCanvas.width = 300;
-  absoluteCanvas.height = 300;
+  absoluteCanvas.width = 100;
+  absoluteCanvas.height = 100;
 
-  transformedCanvas.width = 300;
-  transformedCanvas.height = 300;
+  transformedCanvas.width = 100;
+  transformedCanvas.height = 100;
 
-  perspectiveCanvas.width = 300;
-  perspectiveCanvas.height = 300;
+  perspectiveCanvas.width = 100;
+  perspectiveCanvas.height = 100;
 
   const absoluteContext = absoluteCanvas.getContext('2d');
   const transformedContext = transformedCanvas.getContext('2d');

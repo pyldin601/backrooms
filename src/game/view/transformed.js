@@ -4,8 +4,8 @@ import { rotatePoint } from '../../util/geometry';
 import { moveTo, lineTo } from '../../util/render';
 
 const playerPosition = {
-  x: 150,
-  y: 150,
+  x: 50,
+  y: 50,
 };
 
 function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateInterface) {
@@ -13,9 +13,9 @@ function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateI
   const y = playerPosition.y;
 
   const path = new Path2D();
-  moveTo(path, { x: x - 5, y: y + 5 });
-  lineTo(path, { x, y: y - 5 });
-  lineTo(path, { x: x + 5, y: y + 5 });
+  moveTo(path, { x: x - 5, y: y - 5 });
+  lineTo(path, { x: x + 5, y });
+  lineTo(path, { x: x - 5, y: y + 5 });
 
   context.strokeStyle = '#666666';
   context.stroke(path);
@@ -24,8 +24,8 @@ function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateI
 function renderMap(context: CanvasRenderingContext2D, { map, player }: GameStateInterface) {
   const { x, y, angle } = player.position;
 
-  const diffX = x - 150;
-  const diffY = y - 150;
+  const diffX = x - playerPosition.x;
+  const diffY = y - playerPosition.y;
 
   const path = new Path2D();
 
