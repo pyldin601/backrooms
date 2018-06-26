@@ -12,6 +12,7 @@ export type WallStateInterface = {|
   y1: number;
   x2: number;
   y2: number;
+  color: string;
 |}
 
 export type MapStateInterface = {|

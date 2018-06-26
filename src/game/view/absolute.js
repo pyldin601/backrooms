@@ -22,10 +22,10 @@ function renderMap(context: CanvasRenderingContext2D, { map }: GameStateInterfac
   map.walls.forEach(wall => {
     moveTo(path, { x: wall.x1, y: wall.y1 });
     lineTo(path, { x: wall.x2, y: wall.y2 });
-  });
 
-  context.strokeStyle = '#aabb00';
-  context.stroke(path);
+    context.strokeStyle = wall.color;
+    context.stroke(path);
+  });
 }
 
 export default function render(context: CanvasRenderingContext2D, game: GameStateInterface) {

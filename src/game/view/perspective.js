@@ -19,7 +19,6 @@ const intersect = (x1: number, y1: number, x2: number, y2: number, x3: number, y
 function renderMap(context: CanvasRenderingContext2D, { map, player }: GameStateInterface) {
   const { x, y, angle } = player.position;
 
-  const path = new Path2D();
   const px = x;
   const py = y;
 
@@ -29,48 +28,56 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
     const vx2 = wall.x2;
     const vy2 = wall.y2;
 
-    const tx1 = vx1 - px; const ty1 = vy1 - py;
-    const tx2 = vx2 - px; const ty2 = vy2 - py;
+    let tx1 = vx1 - px; const ty1 = vy1 - py;
+    let tx2 = vx2 - px; const ty2 = vy2 - py;
 
     let tz1 = tx1 * Math.cos(angle) + ty1 * Math.sin(angle);
     let tz2 = tx2 * Math.cos(angle) + ty2 * Math.sin(angle);
 
-    let _tx1 = tx1 * Math.sin(angle) - ty1 * Math.cos(angle);
-    let _tx2 = tx2 * Math.sin(angle) - ty2 * Math.cos(angle);
+    tx1 = tx1 * Math.sin(angle) - ty1 * Math.cos(angle);
+    tx2 = tx2 * Math.sin(angle) - ty2 * Math.cos(angle);
 
     if (tz1 > 0 || tz2 > 0) {
-      const i1: Point = intersect(_tx1, tz1, _tx2, tz2, -.0001, .0001, -20, 5);
-      const i2: Point = intersect(_tx1, tz1, _tx2, tz2, .0001, .0001, 20, 5);
+      const i1: Point = intersect(tx1, tz1, tx2, tz2, -.001, .001, -20, 5);
+      const i2: Point = intersect(tx1, tz1, tx2, tz2, .001, .001, 20, 5);
 
       if (tz1 <= 0) {
         if (i1.y > 0) {
-          _tx1 = i1.x; tz1 = i1.y;
+          tx1 = i1.x; tz1 = i1.y;
         } else {
-          _tx1 = i2.x; tz1 = i2.y;          
+          tx1 = i2.x; tz1 = i2.y;          
         }
       }
 
       if (tz2 <= 0) {
         if (i1.y > 0) {
-          _tx2 = i1.x; tz2 = i1.y;
+          tx2 = i1.x; tz2 = i1.y;
         } else {
-          _tx2 = i2.x; tz2 = i2.y;          
+          tx2 = i2.x; tz2 = i2.y;          
         }
       }
       
-      const x1 = -_tx1 * 16 / tz1; const y1a = -50 / tz1; const y1b = 50 / tz1;
-      const x2 = -_tx2 * 16 / tz2; const y2a = -50 / tz2; const y2b = 50 / tz2;
+      const POV = 48;
+      const POV_ = 1;
 
-      path.moveTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1a);
-      path.lineTo(CANVAS_WIDTH / 2 + x2, CANVAS_HEIGHT / 2 + y2a);
-      path.lineTo(CANVAS_WIDTH / 2 + x2, CANVAS_HEIGHT / 2 + y2b);
-      path.lineTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1b);
-      path.lineTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1a);
-    } 
+      const x1 = -tx1 * POV / tz1; const y1a = -CANVAS_HEIGHT / POV_ / tz1; const y1b = CANVAS_HEIGHT / POV_ / tz1;
+      const x2 = -tx2 * POV / tz2; const y2a = -CANVAS_HEIGHT / POV_ / tz2; const y2b = CANVAS_HEIGHT / POV_ / tz2;
+
+      context.beginPath();
+      context.moveTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1a);
+      context.lineTo(CANVAS_WIDTH / 2 + x2, CANVAS_HEIGHT / 2 + y2a);
+      context.lineTo(CANVAS_WIDTH / 2 + x2, CANVAS_HEIGHT / 2 + y2b);
+      context.lineTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1b);
+      context.lineTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1a);
+      context.closePath();
+
+      context.save();
+      context.fillStyle = wall.color;
+      context.fill();
+      context.restore(); 
+    }
+ 
   });
-
-  context.strokeStyle = '#aabb00';
-  context.stroke(path);
 }
 
 export default function render(context: CanvasRenderingContext2D, game: GameStateInterface) {
