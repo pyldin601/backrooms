@@ -13,10 +13,9 @@ function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateI
   const y = playerPosition.y;
 
   const path = new Path2D();
-  moveTo(path, { x: x - 5, y: y - 5 });
-  lineTo(path, { x: x + 5, y });
-  lineTo(path, { x: x - 5, y: y + 5 });
-
+  moveTo(path, { x, y });
+  lineTo(path, { x: x + 5, y, });
+  
   context.strokeStyle = '#666666';
   context.stroke(path);
 }

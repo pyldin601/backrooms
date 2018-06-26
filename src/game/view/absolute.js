@@ -7,9 +7,9 @@ function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateI
   const { x, y, angle } = player.position;
 
   const path = new Path2D();
-  moveTo(path, rotatePoint({ x: x - 5, y: y - 5 }, { x, y }, angle));
+  moveTo(path, rotatePoint({ x, y }, { x, y }, angle));
   lineTo(path, rotatePoint({ x: x + 5, y, }, { x, y }, angle));
-  lineTo(path, rotatePoint({ x: x - 5, y: y + 5 }, { x, y }, angle));
+  // lineTo(path, rotatePoint({ x: x - 5, y: y + 5 }, { x, y }, angle));
 
   context.strokeStyle = '#666666';
   context.stroke(path);
