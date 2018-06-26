@@ -2,6 +2,7 @@
 import type { GameStateInterface } from '../state';
 import { rotatePoint } from '../../util/geometry';
 import { moveTo, lineTo } from '../../util/render';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../../consts';
 
 function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateInterface) {
   const { x, y, angle } = player.position;
@@ -28,7 +29,7 @@ function renderMap(context: CanvasRenderingContext2D, { map }: GameStateInterfac
 }
 
 export default function render(context: CanvasRenderingContext2D, game: GameStateInterface) {
-  context.clearRect(0, 0, 300, 300);
+  context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   renderMap(context, game);
   renderPlayer(context, game);
 }

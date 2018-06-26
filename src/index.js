@@ -7,37 +7,36 @@ import { createGameReducer } from './game/reducer';
 import renderAbsolute from './game/view/absolute';
 import renderTransformed from './game/view/transformed';
 import renderPerspective from './game/view/perspective';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from './consts';
 
 const generator$ = interval(Scheduler.requestAnimationFrame)
   .pipe(withLatestFrom(createKeysStream(), takeSecond()));
 
-const absoluteCanvas = document.getElementById('canvas-absolute');
-const transformedCanvas = document.getElementById('canvas-transformed');
-const perspectiveCanvas = document.getElementById('canvas-perspective');
+// const absoluteCanvas = document.getElementById('canvas-absolute');
+// const transformedCanvas = document.getElementById('canvas-transformed');
+// const perspectiveCanvas = document.getElementById('canvas-perspective');
 
-if (
-  absoluteCanvas instanceof HTMLCanvasElement &&
-  transformedCanvas instanceof HTMLCanvasElement &&
-  perspectiveCanvas instanceof HTMLCanvasElement
-) {
-  absoluteCanvas.width = 100;
-  absoluteCanvas.height = 100;
-
-  transformedCanvas.width = 100;
-  transformedCanvas.height = 100;
-
-  perspectiveCanvas.width = 100;
-  perspectiveCanvas.height = 100;
-
-  const absoluteContext = absoluteCanvas.getContext('2d');
-  const transformedContext = transformedCanvas.getContext('2d');
-  const perspectiveContext = perspectiveCanvas.getContext('2d');
-
-  generator$
-    .pipe(createGameReducer())
-    .subscribe(gameState => {
-      renderAbsolute(absoluteContext, gameState);
-      renderTransformed(transformedContext, gameState);
-      renderPerspective(perspectiveContext, gameState);
-    });
+const prepareCanvasAndGetContext = (canvasId) => {
+  const element = document.getElementById(canvasId);
+  if (element instanceof HTMLCanvasElement) {
+    element.width = CANVAS_WIDTH;
+    element.height = CANVAS_HEIGHT;
+    const context = element.getContext('2d');
+    context.imageSmoothingEnabled = false;
+    return context;
+  } else {
+    throw new Error('BAD ELEMENT');
+  }
 }
+
+const absoluteContext = prepareCanvasAndGetContext('canvas-absolute');
+const transformedContext = prepareCanvasAndGetContext('canvas-transformed');
+const perspectiveContext = prepareCanvasAndGetContext('canvas-perspective');
+
+generator$
+  .pipe(createGameReducer())
+  .subscribe(gameState => {
+    renderAbsolute(absoluteContext, gameState);
+    renderTransformed(transformedContext, gameState);
+    renderPerspective(perspectiveContext, gameState);
+  });

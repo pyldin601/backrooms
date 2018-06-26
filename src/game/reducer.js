@@ -7,12 +7,12 @@ import { movePoint } from '../util/geometry';
 function movePlayer(player: PlayerStateInterface, keysState: KeysStateInterface) {
   if (keysState.ArrowDown) {
     const { x, y, angle } = player.position;
-    player.position = { angle, ...movePoint({ x, y }, .5, angle) };
+    player.position = { angle, ...movePoint({ x, y }, .1, angle) };
   }
 
   if (keysState.ArrowUp) {
     const { x, y, angle } = player.position;
-    player.position = { angle, ...movePoint({ x, y }, -.5, angle) };
+    player.position = { angle, ...movePoint({ x, y }, -.1, angle) };
   }
 
   if (keysState.ArrowLeft) {
