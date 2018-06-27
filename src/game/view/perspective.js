@@ -36,6 +36,10 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
     let tz1 = tx1 * Math.cos(angle) + ty1 * Math.sin(angle);
     let tz2 = tx2 * Math.cos(angle) + ty2 * Math.sin(angle);
 
+    if (tz1 <= 0 || tz2 <= 0) {
+      return;
+    }
+
     tx1 = tx1 * Math.sin(angle) - ty1 * Math.cos(angle);
     tx2 = tx2 * Math.sin(angle) - ty2 * Math.cos(angle);
 
