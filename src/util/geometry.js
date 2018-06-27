@@ -1,14 +1,21 @@
 // @flow
-export type Point = {|
+export type Point = {
   x: number,
   y: number,
-|};
+};
 
-export type Point3D = {|
+export type Point3D = {
   x: number,
   y: number,
   z: number,
-|};
+};
+
+export type Line = {
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+};
 
 export function rotatePoint(point: Point, center: Point, angle: number): Point {
   const c = Math.cos(angle);
@@ -68,4 +75,16 @@ export function project3DPoint(point: Point3D, camera: Point3D, angle: number): 
     x: (dx - ex) * (ez / dz),
     y: (dy - ey) * (ez + dz),
   };
+}
+
+export function getDistance(p1: Point, p2: Point): number {
+  return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+}
+
+export function getShortDistanceToLine(line: Line, point: Point): number {
+  const center = {
+    x: (line.x1 + line.x2) / 2,
+    y: (line.y1 + line.y2) / 2,
+  };
+  return getDistance(center, point);
 }

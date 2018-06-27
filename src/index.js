@@ -12,10 +12,6 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from './consts';
 const generator$ = interval(Scheduler.requestAnimationFrame)
   .pipe(withLatestFrom(createKeysStream(), takeSecond()));
 
-// const absoluteCanvas = document.getElementById('canvas-absolute');
-// const transformedCanvas = document.getElementById('canvas-transformed');
-// const perspectiveCanvas = document.getElementById('canvas-perspective');
-
 const prepareCanvasAndGetContext = (canvasId) => {
   const element = document.getElementById(canvasId);
   if (element instanceof HTMLCanvasElement) {
@@ -27,7 +23,7 @@ const prepareCanvasAndGetContext = (canvasId) => {
   } else {
     throw new Error('BAD ELEMENT');
   }
-}
+};
 
 const absoluteContext = prepareCanvasAndGetContext('canvas-absolute');
 const transformedContext = prepareCanvasAndGetContext('canvas-transformed');
