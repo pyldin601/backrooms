@@ -2,6 +2,8 @@
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../../consts";
 import type { Point } from "../../util/geometry";
 import type { GameStateInterface } from '../state';
+import { orderBy } from 'lodash';
+import { getShortDistanceToLine } from '../../util/geometry';
 
 const fnCross = (x1: number, y1: number, x2: number, y2: number): number => x1 * y2 - y1 * x2; 
 
@@ -31,8 +33,9 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
   context.fillStyle = '#2a2a2a';
   context.fillRect(0, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+  const sortedWalls = orderBy(map.walls, wall => getShortDistanceToLine(wall, player.position), 'desc');
 
-  map.walls.forEach(wall => {
+  sortedWalls.forEach(wall => {
     const vx1 = wall.x1;
     const vy1 = wall.y1;
     const vx2 = wall.x2;
