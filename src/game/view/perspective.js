@@ -1,7 +1,7 @@
 // @flow
+import { orderBy } from 'lodash';
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../../consts';
 import type { GameStateInterface } from '../state';
-import { orderBy } from 'lodash';
 import { getShortDistanceToLine } from '../../util/geometry';
 
 function renderMap(context: CanvasRenderingContext2D, { map, player }: GameStateInterface) {
