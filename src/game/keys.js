@@ -17,8 +17,8 @@ export function createKeysStream(): Observable<KeysStateInterface> {
   const ups$ = fromEvent(document, 'keyup');
 
   return merge(downs$, ups$).pipe(
-    tap(event => event.preventDefault()),
     filter(event => allowedKeys.has(event.key)),
+    tap(event => event.preventDefault()),
     groupBy(event => event.key),
     map(group => group.pipe(distinctUntilChanged(null, event => event.type))),
     mergeAll(),
