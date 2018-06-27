@@ -17,6 +17,13 @@ export type Line = {
   y2: number,
 };
 
+export function projectPerspective(point: Point, angle: number): Point {
+  return {
+    x: point.x * Math.sin(angle) - point.y * Math.cos(angle),
+    y: point.x * Math.cos(angle) + point.y * Math.sin(angle),
+  };
+}
+
 export function rotatePoint(point: Point, center: Point, angle: number): Point {
   const c = Math.cos(angle);
   const s = Math.sin(angle);

@@ -2,7 +2,7 @@
 import { orderBy } from 'lodash';
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../../consts';
 import type { GameStateInterface } from '../state';
-import { getShortDistanceToLine } from '../../util/geometry';
+import { getShortDistanceToLine, projectPerspective } from '../../util/geometry';
 
 function renderMap(context: CanvasRenderingContext2D, { map, player }: GameStateInterface) {
   const { x, y, angle } = player.position;
@@ -23,35 +23,32 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
   );
 
   sortedWalls.forEach(wall => {
-    const vx1 = wall.x1;
-    const vy1 = wall.y1;
-    const vx2 = wall.x2;
-    const vy2 = wall.y2;
+    const relativeP1 = {
+      x: wall.x1 - px,
+      y: wall.y1 - py,
+    };
 
-    let tx1 = vx1 - px;
-    const ty1 = vy1 - py;
-    let tx2 = vx2 - px;
-    const ty2 = vy2 - py;
+    const relativeP2 = {
+      x: wall.x2 - px,
+      y: wall.y2 - py,
+    };
 
-    let tz1 = tx1 * Math.cos(angle) + ty1 * Math.sin(angle);
-    let tz2 = tx2 * Math.cos(angle) + ty2 * Math.sin(angle);
+    const perspectiveP1 = projectPerspective(relativeP1, angle);
+    const perspectiveP2 = projectPerspective(relativeP2, angle);
 
-    if (tz1 <= 0 || tz2 <= 0) {
+    if (perspectiveP1.y <= 0 || perspectiveP2.y <= 0) {
       return;
     }
-
-    tx1 = tx1 * Math.sin(angle) - ty1 * Math.cos(angle);
-    tx2 = tx2 * Math.sin(angle) - ty2 * Math.cos(angle);
 
     const POV = 32;
     const POV_ = 1;
 
-    const x1 = (-tx1 * POV) / tz1;
-    const y1a = -CANVAS_HEIGHT / POV_ / tz1;
-    const y1b = CANVAS_HEIGHT / POV_ / tz1;
-    const x2 = (-tx2 * POV) / tz2;
-    const y2a = -CANVAS_HEIGHT / POV_ / tz2;
-    const y2b = CANVAS_HEIGHT / POV_ / tz2;
+    const x1 = (-perspectiveP1.x * POV) / perspectiveP1.y;
+    const y1a = -CANVAS_HEIGHT / POV_ / perspectiveP1.y;
+    const y1b = CANVAS_HEIGHT / POV_ / perspectiveP1.y;
+    const x2 = (-perspectiveP2.x * POV) / perspectiveP2.y;
+    const y2a = -CANVAS_HEIGHT / POV_ / perspectiveP2.y;
+    const y2b = CANVAS_HEIGHT / POV_ / perspectiveP2.y;
 
     context.save();
     context.beginPath();
