@@ -22,6 +22,16 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
   const px = x;
   const py = y;
 
+
+  context.fillStyle = '#cacaca';
+  context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT / 2);
+
+
+
+  context.fillStyle = '#2a2a2a';
+  context.fillRect(0, CANVAS_HEIGHT / 2, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+
   map.walls.forEach(wall => {
     const vx1 = wall.x1;
     const vy1 = wall.y1;
@@ -57,12 +67,13 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
         }
       }
       
-      const POV = 48;
+      const POV = 32;
       const POV_ = 1;
 
       const x1 = -tx1 * POV / tz1; const y1a = -CANVAS_HEIGHT / POV_ / tz1; const y1b = CANVAS_HEIGHT / POV_ / tz1;
       const x2 = -tx2 * POV / tz2; const y2a = -CANVAS_HEIGHT / POV_ / tz2; const y2b = CANVAS_HEIGHT / POV_ / tz2;
 
+      context.save();
       context.beginPath();
       context.moveTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1a);
       context.lineTo(CANVAS_WIDTH / 2 + x2, CANVAS_HEIGHT / 2 + y2a);
@@ -70,10 +81,11 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
       context.lineTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1b);
       context.lineTo(CANVAS_WIDTH / 2 + x1, CANVAS_HEIGHT / 2 + y1a);
       context.closePath();
-
-      context.save();
       context.fillStyle = wall.color;
       context.fill();
+
+      // context.strokeStyle = wall.color;
+      // context.stroke();
       context.restore(); 
     }
  
@@ -81,6 +93,6 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
 }
 
 export default function render(context: CanvasRenderingContext2D, game: GameStateInterface) {
-  context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  // context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   renderMap(context, game);
 }
