@@ -2,6 +2,7 @@
 import type { Sector, Camera, Ray } from './types';
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../../consts';
 import { crossTheWall } from './raycaster';
+import { darken } from './colors';
 
 export const FOV_IN_RADIANS = Math.PI / 2;
 export const RAY_WIDTH = 1;
@@ -28,7 +29,7 @@ export function renderColumn(
     context.save();
 
     context.beginPath();
-    context.fillStyle = wall.color;
+    context.fillStyle = darken(wall.color, rayCross.distance);
     context.fillRect(screenOffset, CANVAS_HEIGHT / 2 - wallViewHeight, rayWidth, wallViewHeight * 2);
     context.closePath();
     context.fill();
