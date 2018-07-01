@@ -1,16 +1,13 @@
 // @flow
-import type { Point, Ray, RayCross, Sector, Wall, Camera } from './types';
-import { isBetween } from './numbers';
+import type { Point, Ray, RayCross, Wall } from './types';
+import { isBetween, scale, unscale } from './numbers';
 import { rotatePoint } from '../../util/geometry';
 
 export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
   if (isRayCentered(ray)) {
-    if (Math.max(wall.p1.x, wall.p2.x) >= ray.x && isBetween(wall.p1.y, wall.p2.y, ray.y)) {
-      const verticalProjectionHeight = Math.max(wall.p1.y, wall.p2.y) - Math.min(wall.p1.y, wall.p2.y);
-      const upperPoint = Math.min(wall.p1.y, wall.p2.y);
-      const offset = 1 / verticalProjectionHeight * (ray.y - upperPoint);
-      console.log(offset);
-      const distance = (wall.p1.x - wall.p2.x) * offset - ray.x;
+    if (Math.max(wall.p1.x, wall.p2.x) > ray.x && isBetween(wall.p1.y, wall.p2.y, ray.y)) {
+      const offset = unscale(wall.p1.y, wall.p2.y, ray.y);
+      const distance = scale(wall.p1.x, wall.p2.x, offset) - ray.x;
 
       return { distance, offset };
     }
@@ -18,10 +15,6 @@ export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
   }
 
   return crossTheWall(centerRay(ray), rotateWall(wall, ray, ray.angle));
-}
-
-export function getLineWidth(p1: number, p2: number): number {
-  return p1 < p2 ? p2 - p1 : p1 - p2;
 }
 
 export function rotateRay(ray: Ray, angle: number): Ray {
@@ -36,10 +29,10 @@ export function isRayCentered(ray: Ray): boolean {
   return ray.angle === 0;
 }
 
-export function rotateWall(wall: Wall, center: Point, angle: number): Wall {
+export function rotateWall({ p1, p2, color }: Wall, center: Point, angle: number): Wall {
   return {
-    p1: rotatePoint(wall.p1, center, -angle),
-    p2: rotatePoint(wall.p2, center, -angle),
-    color: wall.color,
+    p1: rotatePoint(p1, center, -angle),
+    p2: rotatePoint(p2, center, -angle),
+    color,
   };
 }
