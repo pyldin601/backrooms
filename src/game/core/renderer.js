@@ -36,10 +36,10 @@ export function renderColumn(
 
 export function renderSector(context: CanvasRenderingContext2D, sector: Sector, camera: Camera) {
   const startAngle = camera.angle - FOV_IN_RADIANS / 2;
-  //
-  // for (let i = 0; i < CANVAS_WIDTH; i += RAY_WIDTH) {
-  //   const ray = { ...camera, angle: startAngle + (FOV_IN_RADIANS / CANVAS_WIDTH) * i };
-  //   renderColumn(context, sector, ray, i * RAY_WIDTH, RAY_WIDTH);
-  // }
-  renderColumn(context, sector, camera, 0, CANVAS_WIDTH);
+
+  for (let i = 0; i < CANVAS_WIDTH; i += RAY_WIDTH) {
+    const ray = { ...camera, angle: startAngle + (FOV_IN_RADIANS / CANVAS_WIDTH) * i };
+    renderColumn(context, sector, ray, i * RAY_WIDTH, RAY_WIDTH);
+  }
+  // renderColumn(context, sector, camera, 0, CANVAS_WIDTH);
 }

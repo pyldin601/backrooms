@@ -6,7 +6,7 @@ export function isBetween(bound1: number, bound2: number, subject: number): bool
 }
 
 export function scale(min: number, max: number, rate: number): number {
-  const delta = Math.abs(max - min);
+  const delta = max - min;
   return min + delta * rate;
 }
 
