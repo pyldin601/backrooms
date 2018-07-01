@@ -13,12 +13,15 @@ export function renderColumn(
   screenOffset: number,
   rayWidth: number,
 ) {
+  let nearestWall = Infinity;
   for (const wall of sector.walls) {
     const rayCross = crossTheWall(ray, wall);
 
-    if (rayCross === null) {
+    if (rayCross === null || rayCross.distance >= nearestWall) {
       continue;
     }
+
+    nearestWall = rayCross.distance;
 
     const wallViewHeight = CANVAS_HEIGHT / rayCross.distance;
 
@@ -41,5 +44,4 @@ export function renderSector(context: CanvasRenderingContext2D, sector: Sector, 
     const ray = { ...camera, angle: startAngle + (FOV_IN_RADIANS / CANVAS_WIDTH) * i };
     renderColumn(context, sector, ray, i * RAY_WIDTH, RAY_WIDTH);
   }
-  // renderColumn(context, sector, camera, 0, CANVAS_WIDTH);
 }
