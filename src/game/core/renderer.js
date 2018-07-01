@@ -5,7 +5,6 @@ import { crossTheWall } from './raycaster';
 import { darken } from './colors';
 
 export const FOV_IN_RADIANS = Math.PI / 2;
-export const RAY_WIDTH = 1;
 
 export function renderColumn(
   context: CanvasRenderingContext2D,
@@ -13,7 +12,6 @@ export function renderColumn(
   ray: Ray,
   camera: Camera,
   screenOffset: number,
-  rayWidth: number,
 ) {
   let nearestWall = Infinity;
   for (const wall of sector.walls) {
@@ -26,13 +24,13 @@ export function renderColumn(
     nearestWall = rayCross.distance;
 
     const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
-    const perspectiveHeight = CANVAS_HEIGHT / lensDistance * 0.5;
+    const perspectiveHeight = (CANVAS_HEIGHT / lensDistance) * (wall.height / 4);
 
     context.save();
 
     context.beginPath();
     context.fillStyle = darken(wall.color, rayCross.distance);
-    context.fillRect(screenOffset, CANVAS_HEIGHT / 2 - perspectiveHeight, rayWidth, perspectiveHeight * 2);
+    context.fillRect(screenOffset, CANVAS_HEIGHT / 2 - perspectiveHeight, 1, perspectiveHeight * 2);
     context.closePath();
     context.fill();
 
@@ -43,8 +41,12 @@ export function renderColumn(
 export function renderSector(context: CanvasRenderingContext2D, sector: Sector, camera: Camera) {
   const startAngle = camera.angle - FOV_IN_RADIANS / 2;
 
-  for (let i = 0; i < CANVAS_WIDTH; i += RAY_WIDTH) {
-    const ray = { ...camera, angle: startAngle + (FOV_IN_RADIANS / CANVAS_WIDTH) * i };
-    renderColumn(context, sector, ray, camera, i * RAY_WIDTH, RAY_WIDTH);
+  for (let i = 0; i < CANVAS_WIDTH; i += 1) {
+    const angle = startAngle + (FOV_IN_RADIANS / CANVAS_WIDTH) * i;
+    const ray = {
+      ...camera,
+      angle,
+    };
+    renderColumn(context, sector, ray, camera, i);
   }
 }

@@ -7,6 +7,7 @@ export interface Point {
 export interface Wall {
   p1: Point;
   p2: Point;
+  height: number;
   color: string;
 }
 
