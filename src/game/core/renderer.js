@@ -24,7 +24,7 @@ export function renderColumn(
     nearestWall = rayCross.distance;
 
     const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
-    const perspectiveHeight = (CANVAS_HEIGHT / lensDistance) * (wall.height / 4);
+    const perspectiveHeight = (CANVAS_HEIGHT / lensDistance) * (sector.height / 4);
 
     context.save();
 

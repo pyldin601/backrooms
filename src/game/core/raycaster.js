@@ -5,7 +5,7 @@ import { rotatePoint } from '../../util/geometry';
 
 export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
   if (isRayCentered(ray)) {
-    if (Math.min(wall.p1.x, wall.p2.x) > ray.x && isBetween(wall.p1.y, wall.p2.y, ray.y)) {
+    if (wall.p1.y <= ray.y && ray.y <= wall.p2.y) {
       const offset = unscale(wall.p1.y, wall.p2.y, ray.y);
       const distance = scale(wall.p1.x, wall.p2.x, offset) - ray.x;
 
