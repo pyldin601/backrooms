@@ -17,6 +17,10 @@ export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
   return crossTheWall(centerRay(ray), rotateWall(wall, ray, ray.angle));
 }
 
+export function cropWall(wall: Wall, threshold: number): Wall {
+  return wall;
+}
+
 export function rotateRay(ray: Ray, angle: number): Ray {
   return { ...ray, angle };
 }

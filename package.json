@@ -4,7 +4,8 @@
   "description": "",
   "homepage": "https://pldin601.github.io/game",
   "scripts": {
-    "prestart": "rimraf dist/*",
+    "clean": "rimraf dist/* .cache/*",
+    "prestart": "npm run clean",
     "start": "parcel public/index.html",
     "prebuild": "rimraf dist/*",
     "build": "parcel build public/index.html --public-url ./",

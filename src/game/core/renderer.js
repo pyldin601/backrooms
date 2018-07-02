@@ -12,12 +12,13 @@ export function renderColumn(
   ray: Ray,
   camera: Camera,
   screenOffset: number,
+  screenWidth: number,
 ) {
   let nearestWall = Infinity;
   for (const wall of sector.walls) {
     const rayCross = crossTheWall(ray, wall);
 
-    if (rayCross === null || rayCross.distance >= nearestWall) {
+    if (rayCross === null || rayCross.distance <= 0 || rayCross.distance >= nearestWall) {
       continue;
     }
 
@@ -30,7 +31,12 @@ export function renderColumn(
 
     context.beginPath();
     context.fillStyle = darken(wall.color, rayCross.distance);
-    context.fillRect(screenOffset, CANVAS_HEIGHT / 2 - perspectiveHeight, 1, perspectiveHeight * 2);
+    context.fillRect(
+      screenOffset,
+      CANVAS_HEIGHT / 2 - perspectiveHeight,
+      screenWidth,
+      perspectiveHeight * 2,
+    );
     context.closePath();
     context.fill();
 
@@ -47,6 +53,6 @@ export function renderSector(context: CanvasRenderingContext2D, sector: Sector, 
       ...camera,
       angle,
     };
-    renderColumn(context, sector, ray, camera, i);
+    renderColumn(context, sector, ray, camera, i, 1);
   }
 }
