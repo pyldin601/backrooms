@@ -11,6 +11,7 @@ const initialState: GameStateInterface = {
       x: 10,
       y: 10,
       angle: 0,
+      sector: 0,
     },
   },
   map: {
@@ -24,7 +25,7 @@ const initialState: GameStateInterface = {
         wall(point(0, 50), point(0, 0)),
       ]),
       sector(DEFAULT_HEIGHT, [
-        wall(point(40, 20), point(30, 20)),
+        wall(point(30, 30), point(30, 20)),
         wall(point(30, 20), point(60, 20)),
         wall(point(60, 20), point(60, 30), getRandomColor(), portal(2, 1)),
         wall(point(60, 30), point(30, 30)),

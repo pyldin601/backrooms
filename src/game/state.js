@@ -6,6 +6,7 @@ export type PlayerStateInterface = {|
     x: number;
     y: number;
     angle: number;
+    sector: number;
   };
 |}
 

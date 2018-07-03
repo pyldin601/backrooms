@@ -10,13 +10,13 @@ function movePlayer(player: PlayerStateInterface, keysState: KeysStateInterface,
   const turnSpeed = PLAYER_TURN_STEP / 16 * deltaMs;
 
   if (keysState.ArrowDown) {
-    const { x, y, angle } = player.position;
-    player.position = { angle, ...movePoint({ x, y }, walkSpeed, angle) };
+    const { x, y, angle, sector } = player.position;
+    player.position = { angle, ...movePoint({ x, y }, walkSpeed, angle), sector };
   }
 
   if (keysState.ArrowUp) {
-    const { x, y, angle } = player.position;
-    player.position = { angle, ...movePoint({ x, y }, -walkSpeed, angle) };
+    const { x, y, angle, sector } = player.position;
+    player.position = { angle, ...movePoint({ x, y }, -walkSpeed, angle), sector };
   }
 
   if (keysState.ArrowLeft) {
