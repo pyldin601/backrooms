@@ -4,10 +4,16 @@ export interface Point {
   y: number;
 }
 
+export interface Portal {
+  sector: number;
+  wall: number;
+}
+
 export interface Wall {
   p1: Point;
   p2: Point;
   color: string;
+  portal: ?Portal;
 }
 
 export interface Sector {
