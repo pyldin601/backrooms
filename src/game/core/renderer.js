@@ -4,19 +4,20 @@ import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './colors';
 
-export const FOCUS_LENGTH = .8;
+export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
 
 export function renderColumn(
   context: CanvasRenderingContext2D,
-  sector: Sector,
+  sector: number,
+  sectors: Sector[],
   ray: Ray,
   camera: Camera,
   screenOffset: number,
   screenWidth: number,
 ) {
   let nearestWall = Infinity;
-  for (const wall of sector.walls) {
+  for (const wall of sectors[sector].walls) {
     const rayCross = crossTheWall(ray, wall);
 
     if (rayCross === null || rayCross.distance >= nearestWall) {
@@ -25,34 +26,44 @@ export function renderColumn(
 
     nearestWall = rayCross.distance;
 
-    const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
-    const perspectiveHeight = (PERSPECTIVE_HEIGHT / lensDistance) * (sector.height / HEIGHT_RATIO);
+    if (wall.portal !== undefined && wall.portal !== null) {
+      renderColumn(context, wall.portal.sector, sectors, ray, camera, screenOffset, screenWidth);
+    } else {
+      const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
+      const perspectiveHeight =
+        (PERSPECTIVE_HEIGHT / lensDistance) * (sectors[sector].height / HEIGHT_RATIO);
 
-    context.save();
+      context.save();
 
-    context.beginPath();
-    context.fillStyle = darken(wall.color, Math.sqrt(rayCross.distance) * 6);
-    context.fillRect(
-      screenOffset,
-      PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
-      screenWidth,
-      perspectiveHeight * 2,
-    );
-    context.closePath();
-    context.fill();
+      context.beginPath();
+      context.fillStyle = darken(wall.color, Math.sqrt(rayCross.distance) * 6);
+      context.fillRect(
+        screenOffset,
+        PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
+        screenWidth,
+        perspectiveHeight * 2,
+      );
+      context.closePath();
+      context.fill();
 
-    context.restore();
+      context.restore();
+    }
   }
 }
 
-export function renderSector(context: CanvasRenderingContext2D, sector: Sector, camera: Camera) {
+export function renderSector(
+  context: CanvasRenderingContext2D,
+  sector: number,
+  sectors: Sector[],
+  camera: Camera,
+) {
   for (let i = 0; i < PERSPECTIVE_WIDTH; i += 1) {
-    const biasedFraction = i / PERSPECTIVE_WIDTH - .5;
+    const biasedFraction = i / PERSPECTIVE_WIDTH - 0.5;
     const angle = Math.atan2(biasedFraction, FOCUS_LENGTH) + camera.angle;
     const ray = {
       ...camera,
       angle,
     };
-    renderColumn(context, sector, ray, camera, i, 1);
+    renderColumn(context, sector, sectors, ray, camera, i, 1);
   }
 }
