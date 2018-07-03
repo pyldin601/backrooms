@@ -31,8 +31,8 @@ const perspectiveContext = prepareCanvasAndGetContext('canvas-perspective');
 
 generator$
   .pipe(createGameReducer())
-  .subscribe(gameState => {
-    renderAbsolute(absoluteContext, gameState);
-    renderTransformed(transformedContext, gameState);
-    renderPerspective(perspectiveContext, gameState);
+  .subscribe(({ time, state }) => {
+    renderAbsolute(absoluteContext, state);
+    renderTransformed(transformedContext, state);
+    renderPerspective(perspectiveContext, state);
   });
