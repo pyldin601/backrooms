@@ -14,16 +14,10 @@ function renderBackground(context: CanvasRenderingContext2D, { map }: GameStateI
 
 function renderMap(context: CanvasRenderingContext2D, { map, player }: GameStateInterface) {
   const camera = player.position;
-  const sector = {
-    walls: map.walls.map(({ x1, y1, x2, y2, color }) => ({
-      p1: { x: x1, y: y1 },
-      p2: { x: x2, y: y2 },
-      color,
-    })),
-    height: 10,
-  };
 
-  renderSector(context, sector, camera);
+  map.sectors.forEach(sector => {
+    renderSector(context, sector, camera);
+  });
 }
 
 export default function render(context: CanvasRenderingContext2D, game: GameStateInterface) {

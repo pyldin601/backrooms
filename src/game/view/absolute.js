@@ -10,7 +10,6 @@ function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateI
   const path = new Path2D();
   moveTo(path, rotatePoint({ x, y }, { x, y }, angle));
   lineTo(path, rotatePoint({ x: x + 5, y, }, { x, y }, angle));
-  // lineTo(path, rotatePoint({ x: x - 5, y: y + 5 }, { x, y }, angle));
 
   context.strokeStyle = '#666666';
   context.stroke(path);
@@ -19,12 +18,14 @@ function renderPlayer(context: CanvasRenderingContext2D, { player } : GameStateI
 function renderMap(context: CanvasRenderingContext2D, { map }: GameStateInterface) {
   const path = new Path2D();
 
-  map.walls.forEach(wall => {
-    moveTo(path, { x: wall.x1, y: wall.y1 });
-    lineTo(path, { x: wall.x2, y: wall.y2 });
+  map.sectors.forEach(sector => {
+    sector.walls.forEach(wall => {
+      moveTo(path, wall.p1);
+      lineTo(path, wall.p2);
 
-    context.strokeStyle = wall.color;
-    context.stroke(path);
+      context.strokeStyle = wall.color;
+      context.stroke(path);
+    });
   });
 }
 

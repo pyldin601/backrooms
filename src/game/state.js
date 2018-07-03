@@ -1,4 +1,6 @@
 // @flow
+import type { Sector } from '../game/core/types';
+
 export type PlayerStateInterface = {|
   position: {
     x: number;
@@ -7,16 +9,8 @@ export type PlayerStateInterface = {|
   };
 |}
 
-export type WallStateInterface = {|
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  color: string;
-|}
-
 export type MapStateInterface = {|
-  walls: Array<WallStateInterface>;
+  sectors: Array<Sector>;
 |}
 
 export type GameStateInterface = {|

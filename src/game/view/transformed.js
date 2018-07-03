@@ -30,13 +30,16 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
 
   const path = new Path2D();
 
-  map.walls.forEach(wall => {
-    moveTo(path, rotatePoint({ x: wall.x1 - diffX, y: wall.y1 - diffY }, playerPosition, -angle));
-    lineTo(path, rotatePoint({ x: wall.x2 - diffX, y: wall.y2 - diffY }, playerPosition, -angle));
+  map.sectors.forEach(sector => {
+    sector.walls.forEach(wall => {
+      moveTo(path, rotatePoint({ x: wall.p1.x - diffX, y: wall.p1.y - diffY }, playerPosition, -angle));
+      lineTo(path, rotatePoint({ x: wall.p2.x - diffX, y: wall.p2.y - diffY }, playerPosition, -angle));
 
-    context.strokeStyle = wall.color;
-    context.stroke(path);
+      context.strokeStyle = wall.color;
+      context.stroke(path);
+    });
   });
+
 }
 
 export default function render(context: CanvasRenderingContext2D, game: GameStateInterface) {
