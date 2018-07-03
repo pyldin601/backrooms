@@ -1,5 +1,5 @@
 // @flow
-import type { Sector, Camera, Ray } from './types';
+import type { Sector, Camera, Ray, Wall } from './types';
 import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './colors';
@@ -26,6 +26,7 @@ export function renderColumn(
 
     nearestWall = rayCross.distance;
 
+    // If wall has portal just render column of neighbor sector
     if (wall.portal !== undefined && wall.portal !== null) {
       renderColumn(context, wall.portal.sector, sectors, ray, camera, screenOffset, screenWidth);
     } else {
