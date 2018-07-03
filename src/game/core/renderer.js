@@ -31,7 +31,7 @@ export function renderColumn(
     context.save();
 
     context.beginPath();
-    context.fillStyle = darken(wall.color, rayCross.distance);
+    context.fillStyle = darken(wall.color, Math.sqrt(rayCross.distance) * 6);
     context.fillRect(
       screenOffset,
       PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
