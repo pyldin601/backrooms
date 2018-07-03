@@ -39,7 +39,7 @@ const initialState: GameStateInterface = {
     },
   },
   map: {
-    sectors: [flatMapToSector(240, 240, MAP)]
+    sectors: [flatMapToSector(250, 250, MAP)]
   },
 };
 
