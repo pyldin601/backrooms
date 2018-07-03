@@ -1,11 +1,11 @@
 // @flow
 import type { Sector, Camera, Ray } from './types';
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../../consts';
+import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './colors';
 
 export const FOCUS_LENGTH = .8;
-export const HEIGHT_RATIO = 2.66;
+export const HEIGHT_RATIO = 1.3;
 
 export function renderColumn(
   context: CanvasRenderingContext2D,
@@ -26,7 +26,7 @@ export function renderColumn(
     nearestWall = rayCross.distance;
 
     const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
-    const perspectiveHeight = (CANVAS_HEIGHT / lensDistance) * (sector.height / HEIGHT_RATIO);
+    const perspectiveHeight = (PERSPECTIVE_HEIGHT / lensDistance) * (sector.height / HEIGHT_RATIO);
 
     context.save();
 
@@ -34,7 +34,7 @@ export function renderColumn(
     context.fillStyle = darken(wall.color, rayCross.distance);
     context.fillRect(
       screenOffset,
-      CANVAS_HEIGHT / 2 - perspectiveHeight,
+      PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
       screenWidth,
       perspectiveHeight * 2,
     );
@@ -46,8 +46,8 @@ export function renderColumn(
 }
 
 export function renderSector(context: CanvasRenderingContext2D, sector: Sector, camera: Camera) {
-  for (let i = 0; i < CANVAS_WIDTH; i += 1) {
-    const biasedFraction = i / CANVAS_WIDTH - .5;
+  for (let i = 0; i < PERSPECTIVE_WIDTH; i += 1) {
+    const biasedFraction = i / PERSPECTIVE_WIDTH - .5;
     const angle = Math.atan2(biasedFraction, FOCUS_LENGTH) + camera.angle;
     const ray = {
       ...camera,

@@ -23,3 +23,12 @@ html, body {
     border: 1px solid #222222;
     image-rendering: pixelated;
 }
+
+
+.perspective_view {
+    width: 800px;
+    height: 400px;
+    box-sizing: border-box;
+    border: 1px solid #222222;
+    image-rendering: pixelated;
+}

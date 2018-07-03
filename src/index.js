@@ -4,19 +4,19 @@ import { withLatestFrom } from 'rxjs/operators';
 import { createKeysStream } from './game/keys';
 import { takeSecond } from './util/projection';
 import { createGameReducer } from './game/reducer';
-import renderAbsolute from './game/view/absolute';
 import renderTransformed from './game/view/transformed';
 import renderPerspective from './game/view/perspective';
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from './consts';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from './consts';
 
-const generator$ = interval(Scheduler.requestAnimationFrame)
-  .pipe(withLatestFrom(createKeysStream(), takeSecond()));
+const generator$ = interval(Scheduler.requestAnimationFrame).pipe(
+  withLatestFrom(createKeysStream(), takeSecond()),
+);
 
-const prepareCanvasAndGetContext = (canvasId) => {
+const prepareCanvasAndGetContext = (canvasId, width, height) => {
   const element = document.getElementById(canvasId);
   if (element instanceof HTMLCanvasElement) {
-    element.width = CANVAS_WIDTH;
-    element.height = CANVAS_HEIGHT;
+    element.width = width;
+    element.height = height;
     const context = element.getContext('2d');
     context.imageSmoothingEnabled = false;
     return context;
@@ -25,14 +25,18 @@ const prepareCanvasAndGetContext = (canvasId) => {
   }
 };
 
-const absoluteContext = prepareCanvasAndGetContext('canvas-absolute');
-const transformedContext = prepareCanvasAndGetContext('canvas-transformed');
-const perspectiveContext = prepareCanvasAndGetContext('canvas-perspective');
+const transformedContext = prepareCanvasAndGetContext(
+  'canvas-transformed',
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+);
+const perspectiveContext = prepareCanvasAndGetContext(
+  'canvas-perspective',
+  PERSPECTIVE_WIDTH,
+  PERSPECTIVE_HEIGHT,
+);
 
-generator$
-  .pipe(createGameReducer())
-  .subscribe(({ time, state }) => {
-    renderAbsolute(absoluteContext, state);
-    renderTransformed(transformedContext, state);
-    renderPerspective(perspectiveContext, state);
-  });
+generator$.pipe(createGameReducer()).subscribe(({ time, state }) => {
+  renderTransformed(transformedContext, state);
+  renderPerspective(perspectiveContext, state);
+});
