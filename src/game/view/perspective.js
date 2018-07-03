@@ -15,9 +15,7 @@ function renderBackground(context: CanvasRenderingContext2D, { map }: GameStateI
 function renderMap(context: CanvasRenderingContext2D, { map, player }: GameStateInterface) {
   const camera = player.position;
 
-  map.sectors.forEach(sector => {
-    renderSector(context, sector, camera);
-  });
+  renderSector(context, map.sectors[0], camera);
 }
 
 export default function render(context: CanvasRenderingContext2D, game: GameStateInterface) {

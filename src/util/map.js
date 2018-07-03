@@ -6,39 +6,39 @@ const BLOCK_SIZE = 10;
 
 export function createInnerBlock(x: number, y: number, width: number, height: number): Wall[] {
   return [
-    { p2: { x: x, y: y }, p1: { x: x + width, y: y }, color: getRandomColor(), portal: undefined },
+    { p2: { x, y }, p1: { x: x + width, y }, color: getRandomColor(), portal: undefined },
     {
-      p2: { x: x + width, y: y },
+      p2: { x: x + width, y },
       p1: { x: x + width, y: y + height },
       color: getRandomColor(),
       portal: undefined,
     },
     {
       p2: { x: x + width, y: y + height },
-      p1: { x: x, y: y + height },
+      p1: { x, y: y + height },
       color: getRandomColor(),
       portal: undefined,
     },
-    { p2: { x: x, y: y + height }, p1: { x: x, y: y }, color: getRandomColor(), portal: undefined },
+    { p2: { x, y: y + height }, p1: { x, y }, color: getRandomColor(), portal: undefined },
   ];
 }
 
 export function createOuterBlock(x: number, y: number, width: number, height: number): Wall[] {
   return [
-    { p1: { x: x, y: y }, p2: { x: x + width, y: y }, color: getRandomColor(), portal: undefined },
+    { p1: { x, y }, p2: { x: x + width, y }, color: getRandomColor(), portal: undefined },
     {
-      p1: { x: x + width, y: y },
+      p1: { x: x + width, y },
       p2: { x: x + width, y: y + height },
       color: getRandomColor(),
       portal: undefined,
     },
     {
       p1: { x: x + width, y: y + height },
-      p2: { x: x, y: y + height },
+      p2: { x, y: y + height },
       color: getRandomColor(),
       portal: undefined,
     },
-    { p1: { x: x, y: y + height }, p2: { x: x, y: y }, color: getRandomColor(), portal: undefined },
+    { p1: { x, y: y + height }, p2: { x, y }, color: getRandomColor(), portal: undefined },
   ];
 }
 
