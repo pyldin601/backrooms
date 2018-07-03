@@ -19,7 +19,7 @@ export function renderColumn(
   for (const wall of sector.walls) {
     const rayCross = crossTheWall(ray, wall);
 
-    if (rayCross === null || rayCross.distance <= 0 || rayCross.distance >= nearestWall) {
+    if (rayCross === null || rayCross.distance >= nearestWall) {
       continue;
     }
 

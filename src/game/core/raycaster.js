@@ -1,6 +1,6 @@
 // @flow
 import type { Point, Ray, RayCross, Wall } from './types';
-import { isBetween, scale, unscale } from './numbers';
+import { scale, unscale } from './numbers';
 import { rotatePoint } from '../../util/geometry';
 
 export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
@@ -8,6 +8,10 @@ export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
     if (wall.p1.y <= ray.y && ray.y <= wall.p2.y) {
       const offset = unscale(wall.p1.y, wall.p2.y, ray.y);
       const distance = scale(wall.p1.x, wall.p2.x, offset) - ray.x;
+
+      if (distance < 0) {
+        return null;
+      }
 
       return { distance, offset };
     }
