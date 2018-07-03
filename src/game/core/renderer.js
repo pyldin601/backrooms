@@ -4,7 +4,8 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './colors';
 
-export const FOV_IN_RADIANS = Math.PI / 2;
+export const FOCUS_LENGTH = .8;
+export const HEIGHT_RATIO = 2.66;
 
 export function renderColumn(
   context: CanvasRenderingContext2D,
@@ -25,7 +26,7 @@ export function renderColumn(
     nearestWall = rayCross.distance;
 
     const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
-    const perspectiveHeight = (CANVAS_HEIGHT / lensDistance) * (sector.height / 4);
+    const perspectiveHeight = (CANVAS_HEIGHT / lensDistance) * (sector.height / HEIGHT_RATIO);
 
     context.save();
 
@@ -45,10 +46,9 @@ export function renderColumn(
 }
 
 export function renderSector(context: CanvasRenderingContext2D, sector: Sector, camera: Camera) {
-  const startAngle = camera.angle - FOV_IN_RADIANS / 2;
-
   for (let i = 0; i < CANVAS_WIDTH; i += 1) {
-    const angle = startAngle + (FOV_IN_RADIANS / CANVAS_WIDTH) * i;
+    const biasedFraction = i / CANVAS_WIDTH - .5;
+    const angle = Math.atan2(biasedFraction, FOCUS_LENGTH) + camera.angle;
     const ray = {
       ...camera,
       angle,

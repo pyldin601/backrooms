@@ -11,7 +11,7 @@ export function darken(color: string, amount: number): string {
   return `#${match
     .slice(1)
     .map(hex => parseInt(hex, 16))
-    .map(int => int - Math.floor(int / 100 * amount))
+    .map(int => Math.max(0, int - Math.floor(int / 100 * amount)))
     .map(newInt => newInt.toString(16).padStart(2, '0'))
     .join('')}`;
 }
