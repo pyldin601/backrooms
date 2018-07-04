@@ -9,9 +9,9 @@ const initialState: GameStateInterface = {
   player: {
     position: {
       x: 10,
-      y: 10,
+      y: 25,
       angle: 0,
-      sector: 0,
+      sector: 1,
     },
   },
   map: {
@@ -27,7 +27,7 @@ const initialState: GameStateInterface = {
       sector(DEFAULT_HEIGHT, [
         wall(point(40, 0), point(50, 0)),
         wall(point(50, 0), point(50, 50)),
-        wall(point(50, 50), point(40, 50), getRandomColor(), portal(2, 4)),
+        wall(point(50, 50), point(40, 50), getRandomColor(), portal(2, 1)),
         wall(point(40, 50), point(40, 0)),
       ]),
       sector(DEFAULT_HEIGHT, [

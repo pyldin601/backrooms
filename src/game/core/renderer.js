@@ -3,7 +3,7 @@ import type { Sector, Camera, Ray } from './types';
 import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
 import { crossTheWall, moveAndRotateCamera } from './raycaster';
 import { darken } from './colors';
-import { getWallAngle } from '../../util/geometry';
+import { getWallAngle, getWallCenter } from '../../util/geometry';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
@@ -36,16 +36,21 @@ export function renderColumn(
       const thisWallAngle = getWallAngle(wall);
       const thatWallAngle = getWallAngle(thatWall);
 
-      const moveAngle = thisWallAngle - thatWallAngle;
-      const moveX = thatWall.p1.x - wall.p2.x;
-      const moveY = thatWall.p1.y - wall.p2.y;
+      const thisWallCenter = getWallCenter(wall);
+      const thatWallCenter = getWallCenter(thatWall);
+
+      const angleDiff = thisWallAngle - thatWallAngle;
+      const moveX = thisWallCenter.x - thatWallCenter.x;
+      const moveY = thisWallCenter.y - thatWallCenter.y;
+
+      console.log({ moveX, moveY });
 
       renderColumn(
         context,
         wall.portal.sector,
         sectors,
-        moveAndRotateCamera(ray, moveX, moveY, moveAngle, thatWall.p1),
-        moveAndRotateCamera(camera, moveX, moveY, moveAngle, thatWall.p1),
+        moveAndRotateCamera(ray, -moveX, -moveY, angleDiff, thatWallCenter),
+        moveAndRotateCamera(camera, -moveX, -moveY, angleDiff, thatWallCenter),
         screenOffset,
         screenWidth,
       );

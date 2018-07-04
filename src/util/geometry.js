@@ -32,6 +32,13 @@ export function getWallAngle(wall: Wall): number {
   return Math.atan(a / b);
 }
 
+export function getWallCenter(wall: Wall): Point {
+  return {
+    x: (wall.p1.x + wall.p2.x) / 2,
+    y: (wall.p1.y + wall.p2.y) / 2,
+  };
+}
+
 export function rotatePoint(point: Point, center: Point, angle: number): Point {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
