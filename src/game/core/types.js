@@ -37,3 +37,7 @@ export interface Camera {
   y: number;
   angle: number;
 }
+
+export interface RenderStats {
+  renderedSectors: number;
+}

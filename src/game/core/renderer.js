@@ -1,11 +1,14 @@
 // @flow
-import type { Sector, Camera, Ray, Wall } from './types';
+import type { Sector, Camera, Ray } from './types';
 import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
-import { crossTheWall } from './raycaster';
+import { crossTheWall, moveAndRotateCamera } from './raycaster';
 import { darken } from './colors';
+import { getWallAngle } from '../../util/geometry';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
+
+export const RENDER_ALL_WALLS = true;
 
 export function renderColumn(
   context: CanvasRenderingContext2D,
@@ -20,15 +23,32 @@ export function renderColumn(
   for (const wall of sectors[sector].walls) {
     const rayCross = crossTheWall(ray, wall);
 
-    if (rayCross === null || rayCross.distance >= nearestWall) {
+    if (rayCross === null || (!RENDER_ALL_WALLS && rayCross.distance >= nearestWall)) {
       continue;
     }
 
     nearestWall = rayCross.distance;
 
-    // If wall has portal just render column of neighbor sector
+    // If wall has portal render column of neighbor sector
     if (wall.portal !== undefined && wall.portal !== null) {
-      renderColumn(context, wall.portal.sector, sectors, ray, camera, screenOffset, screenWidth);
+      const thatWall = sectors[wall.portal.sector].walls[wall.portal.wall];
+
+      const thisWallAngle = getWallAngle(wall);
+      const thatWallAngle = getWallAngle(thatWall);
+
+      const moveAngle = thisWallAngle - thatWallAngle;
+      const moveX = thatWall.p1.x - wall.p2.x;
+      const moveY = thatWall.p1.y - wall.p2.y;
+
+      renderColumn(
+        context,
+        wall.portal.sector,
+        sectors,
+        moveAndRotateCamera(ray, moveX, moveY, moveAngle, thatWall.p1),
+        moveAndRotateCamera(camera, moveX, moveY, moveAngle, thatWall.p1),
+        screenOffset,
+        screenWidth,
+      );
     } else {
       const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
       const perspectiveHeight =

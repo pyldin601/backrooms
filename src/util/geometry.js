@@ -1,4 +1,6 @@
 // @flow
+import type { Wall } from '../game/core/types';
+
 export type Point = {
   x: number,
   y: number,
@@ -22,6 +24,12 @@ export function projectPerspective(point: Point, angle: number): Point {
     x: point.x * Math.sin(angle) - point.y * Math.cos(angle),
     y: point.x * Math.cos(angle) + point.y * Math.sin(angle),
   };
+}
+
+export function getWallAngle(wall: Wall): number {
+  const a = wall.p1.x - wall.p2.x;
+  const b = wall.p1.y - wall.p2.y;
+  return Math.atan(a / b);
 }
 
 export function rotatePoint(point: Point, center: Point, angle: number): Point {

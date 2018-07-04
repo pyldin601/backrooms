@@ -1,5 +1,5 @@
 // @flow
-import type { Point, Ray, RayCross, Wall } from './types';
+import type { Camera, Point, Ray, RayCross, Wall } from './types';
 import { scale, unscale } from './numbers';
 import { rotatePoint } from '../../util/geometry';
 
@@ -33,10 +33,23 @@ export function isRayCentered(ray: Ray): boolean {
   return ray.angle === 0;
 }
 
-export function rotateWall({ p1, p2, color }: Wall, center: Point, angle: number): Wall {
+export function rotateWall({ p1, p2, color, portal }: Wall, center: Point, angle: number): Wall {
   return {
     p1: rotatePoint(p1, center, -angle),
     p2: rotatePoint(p2, center, -angle),
     color,
+    portal,
   };
+}
+
+export function moveAndRotateCamera(
+  camera: Camera,
+  moveX: number,
+  moveY: number,
+  angle: number,
+  center: Point,
+): Camera {
+  const movedCamera = { ...camera, x: camera.x + moveX, y: camera.y + moveY };
+  const newCenter = rotatePoint(movedCamera, center, angle);
+  return { ...camera, angle: camera.angle + angle, ...newCenter };
 }
