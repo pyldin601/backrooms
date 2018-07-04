@@ -8,7 +8,7 @@ import renderTransformed from './game/view/transformed';
 import renderPerspective from './game/view/perspective';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from './consts';
 
-const generator$ = interval(100, Scheduler.requestAnimationFrame).pipe(
+const generator$ = interval(Scheduler.requestAnimationFrame).pipe(
   withLatestFrom(createKeysStream(), takeSecond()),
 );
 
@@ -40,3 +40,5 @@ generator$.pipe(createGameReducer()).subscribe(({ time, state }) => {
   renderTransformed(transformedContext, state);
   renderPerspective(perspectiveContext, state);
 });
+
+module.hot && module.hot.accept(() => window.location.reload());

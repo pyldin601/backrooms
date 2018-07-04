@@ -18,7 +18,7 @@ export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
     return null;
   }
 
-  return crossTheWall(centerRay(ray), rotateWall(wall, ray, ray.angle));
+  return crossTheWall(centerRay(ray), rotateWall(wall, ray, -ray.angle));
 }
 
 export function rotateRay(ray: Ray, angle: number): Ray {
@@ -35,8 +35,8 @@ export function isRayCentered(ray: Ray): boolean {
 
 export function rotateWall({ p1, p2, color, portal }: Wall, center: Point, angle: number): Wall {
   return {
-    p1: rotatePoint(p1, center, -angle),
-    p2: rotatePoint(p2, center, -angle),
+    p1: rotatePoint(p1, center, angle),
+    p2: rotatePoint(p2, center, angle),
     color,
     portal,
   };

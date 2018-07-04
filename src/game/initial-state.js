@@ -11,7 +11,7 @@ const initialState: GameStateInterface = {
       x: 10,
       y: 25,
       angle: 0,
-      sector: 1,
+      sector: 0,
     },
   },
   map: {

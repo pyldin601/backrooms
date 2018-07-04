@@ -8,7 +8,7 @@ import { getWallAngle, getWallCenter } from '../../util/geometry';
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
 
-export const RENDER_ALL_WALLS = true;
+export const RENDER_ALL_WALLS = false;
 
 export function renderColumn(
   context: CanvasRenderingContext2D,
@@ -43,14 +43,12 @@ export function renderColumn(
       const moveX = thisWallCenter.x - thatWallCenter.x;
       const moveY = thisWallCenter.y - thatWallCenter.y;
 
-      console.log({ moveX, moveY });
-
       renderColumn(
         context,
         wall.portal.sector,
         sectors,
-        moveAndRotateCamera(ray, -moveX, -moveY, angleDiff, thatWallCenter),
-        moveAndRotateCamera(camera, -moveX, -moveY, angleDiff, thatWallCenter),
+        moveAndRotateCamera(ray, -moveX, -moveY, -angleDiff, thatWallCenter),
+        moveAndRotateCamera(camera, -moveX, -moveY, -angleDiff, thatWallCenter),
         screenOffset,
         screenWidth,
       );

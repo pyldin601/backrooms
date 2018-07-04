@@ -29,7 +29,7 @@ export function projectPerspective(point: Point, angle: number): Point {
 export function getWallAngle(wall: Wall): number {
   const a = wall.p1.x - wall.p2.x;
   const b = wall.p1.y - wall.p2.y;
-  return Math.atan(a / b);
+  return Math.atan2(a, b);
 }
 
 export function getWallCenter(wall: Wall): Point {
