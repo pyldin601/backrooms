@@ -13,7 +13,7 @@ export function wall(
   p1: Point,
   p2: Point,
   color: string = getRandomColor(),
-  portal: ?Portal = undefined,
+  portal: ?Portal = null,
 ): Wall {
   return { p1, p2, color, portal };
 }
@@ -22,6 +22,6 @@ export function point(x: number, y: number): Point {
   return { x, y };
 }
 
-export function portal(sector: number, wall: number): Portal {
-  return { sector, wall };
+export function portal(sectorId: number, wallId: number): Portal {
+  return { sectorId, wallId };
 }

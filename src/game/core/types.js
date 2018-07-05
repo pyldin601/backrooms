@@ -13,7 +13,7 @@ export interface Wall {
   p1: Point;
   p2: Point;
   color: string;
-  portal: Portal;
+  portal: ?Portal;
 }
 
 export interface Sector {

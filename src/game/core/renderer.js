@@ -17,7 +17,13 @@ function renderPortal(
   screenWidth: number,
   context: CanvasRenderingContext2D,
 ) {
-  const { portal: { wallId, sectorId } } = wall;
+  const { portal } = wall;
+
+  if (portal === null || portal === undefined) {
+    throw new Error(`Wall expected to have portal`);
+  }
+
+  const { sectorId, wallId } = portal;
 
   const thatWall = sectors[sectorId].walls[wallId];
 
@@ -32,13 +38,13 @@ function renderPortal(
   const moveY = thisWallCenter.y - thatWallCenter.y;
 
   renderColumn(
-    context,
     sectorId,
     sectors,
     moveAndRotateCamera(ray, -moveX, -moveY, -angleDiff, thatWallCenter),
     moveAndRotateCamera(camera, -moveX, -moveY, -angleDiff, thatWallCenter),
     screenOffset,
     screenWidth,
+    context,
   );
 }
 
@@ -47,7 +53,7 @@ function renderWall(
   camera: Camera,
   ray: Camera,
   sectors: Sector[],
-  sector: number,
+  sectorId: number,
   wall: Wall,
   screenOffset: number,
   screenWidth: number,
@@ -55,7 +61,7 @@ function renderWall(
 ) {
   const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
   const perspectiveHeight =
-    (PERSPECTIVE_HEIGHT / lensDistance) * (sectors[sector].height / HEIGHT_RATIO);
+    (PERSPECTIVE_HEIGHT / lensDistance) * (sectors[sectorId].height / HEIGHT_RATIO);
 
   context.save();
 
@@ -74,16 +80,17 @@ function renderWall(
 }
 
 export function renderColumn(
-  context: CanvasRenderingContext2D,
-  sector: number,
+  sectorId: number,
   sectors: Sector[],
   ray: Ray,
   camera: Camera,
   screenOffset: number,
   screenWidth: number,
+  context: CanvasRenderingContext2D,
 ) {
   let nearestWall = Infinity;
-  for (const wall of sectors[sector].walls) {
+
+  for (const wall of sectors[sectorId].walls) {
     const rayCross = crossTheWall(ray, wall);
 
     if (rayCross === null || rayCross.distance >= nearestWall) {
@@ -92,17 +99,27 @@ export function renderColumn(
 
     nearestWall = rayCross.distance;
 
-    if (wall.portal) {
+    if (wall.portal !== null && wall.portal !== undefined) {
       renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context);
     } else {
-      renderWall(rayCross, camera, ray, sectors, sector, wall, screenOffset, screenWidth, context);
+      renderWall(
+        rayCross,
+        camera,
+        ray,
+        sectors,
+        sectorId,
+        wall,
+        screenOffset,
+        screenWidth,
+        context,
+      );
     }
   }
 }
 
 export function renderSector(
   context: CanvasRenderingContext2D,
-  sector: number,
+  sectorId: number,
   sectors: Sector[],
   camera: Camera,
 ) {
@@ -113,6 +130,6 @@ export function renderSector(
       ...camera,
       angle,
     };
-    renderColumn(context, sector, sectors, ray, camera, i, 1);
+    renderColumn(sectorId, sectors, ray, camera, i, 1, context);
   }
 }
