@@ -5,8 +5,8 @@ export interface Point {
 }
 
 export interface Portal {
-  sector: number;
-  wall: number;
+  sectorId: number;
+  wallId: number;
 }
 
 export interface Wall {

@@ -11,15 +11,15 @@ export const HEIGHT_RATIO = 1.3;
 function renderPortal(
   wall: Wall,
   sectors: Sector[],
-  context: CanvasRenderingContext2D,
   ray: Camera,
   camera: Camera,
   screenOffset: number,
   screenWidth: number,
+  context: CanvasRenderingContext2D,
 ) {
-  const portal = wall.portal;
+  const { portal: { wallId, sectorId } } = wall;
 
-  const thatWall = sectors[wall.portal.sector].walls[wall.portal.wall];
+  const thatWall = sectors[sectorId].walls[wallId];
 
   const thisWallAngle = getWallAngle(wall);
   const thatWallAngle = getWallAngle(thatWall);
@@ -33,7 +33,7 @@ function renderPortal(
 
   renderColumn(
     context,
-    portal.sector,
+    sectorId,
     sectors,
     moveAndRotateCamera(ray, -moveX, -moveY, -angleDiff, thatWallCenter),
     moveAndRotateCamera(camera, -moveX, -moveY, -angleDiff, thatWallCenter),
@@ -48,10 +48,10 @@ function renderWall(
   ray: Camera,
   sectors: Sector[],
   sector: number,
-  context: CanvasRenderingContext2D,
   wall: Wall,
   screenOffset: number,
   screenWidth: number,
+  context: CanvasRenderingContext2D,
 ) {
   const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
   const perspectiveHeight =
@@ -93,9 +93,9 @@ export function renderColumn(
     nearestWall = rayCross.distance;
 
     if (wall.portal) {
-      renderPortal(wall, sectors, context, ray, camera, screenOffset, screenWidth);
+      renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context);
     } else {
-      renderWall(rayCross, camera, ray, sectors, sector, context, wall, screenOffset, screenWidth);
+      renderWall(rayCross, camera, ray, sectors, sector, wall, screenOffset, screenWidth, context);
     }
   }
 }
