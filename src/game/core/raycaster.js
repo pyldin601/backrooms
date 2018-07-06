@@ -3,26 +3,27 @@ import type { Camera, Point, Ray, RayCross, Wall } from './types';
 import { scale, unscale } from './numbers';
 import { rotatePoint } from '../../util/geometry';
 
+export function isWallInFrontIfCamera(wall: Wall, camera: Camera): boolean {
+  return wall.p1.y <= camera.y && camera.y <= wall.p2.y;
+}
+
 export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
-  if (isRayCentered(ray)) {
-    if (wall.p1.y <= ray.y && ray.y <= wall.p2.y) {
-      const offset = unscale(wall.p1.y, wall.p2.y, ray.y);
-      const distance = scale(wall.p1.x, wall.p2.x, offset) - ray.x;
+  if (!isRayCentered(ray)) {
+    return crossTheWall(centerRay(ray), rotateWall(wall, ray, -ray.angle));
+  }
 
-      if (distance < 0) {
-        return null;
-      }
-
-      return { distance, offset };
-    }
+  if (!isWallInFrontIfCamera(wall, ray)) {
     return null;
   }
 
-  return crossTheWall(centerRay(ray), rotateWall(wall, ray, -ray.angle));
-}
+  const offset = unscale(wall.p1.y, wall.p2.y, ray.y);
+  const distance = scale(wall.p1.x, wall.p2.x, offset) - ray.x;
 
-export function rotateRay(ray: Ray, angle: number): Ray {
-  return { ...ray, angle };
+  if (distance < 0) {
+    return null;
+  }
+
+  return { distance, offset };
 }
 
 export function centerRay(ray: Ray): Ray {

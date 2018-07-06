@@ -21,6 +21,10 @@ export interface Sector {
   walls: Wall[];
 }
 
+export interface Map {
+  sectors: Sector[];
+}
+
 export interface Ray {
   x: number;
   y: number;
