@@ -1,9 +1,9 @@
 // @flow
 import type { Sector, Camera, Ray, Wall, RayCross } from './types';
 import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
-import { crossTheWall, moveAndRotateCamera } from './raycaster';
-import { darken } from './colors';
-import { getWallAngle, getWallCenter } from '../../util/geometry';
+import { crossTheWall } from './raycaster';
+import { darken } from './color';
+import { isWallHasPortal, moveCameraInRelationToPortal } from './portal';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
@@ -27,25 +27,10 @@ function renderPortal(
 
   const thatWall = sectors[sectorId].walls[wallId];
 
-  const thisWallAngle = getWallAngle(wall);
-  const thatWallAngle = getWallAngle(thatWall);
+  const movedCamera = moveCameraInRelationToPortal(wall, thatWall, camera);
+  const movedRay = moveCameraInRelationToPortal(wall, thatWall, ray);
 
-  const thisWallCenter = getWallCenter(wall);
-  const thatWallCenter = getWallCenter(thatWall);
-
-  const angleDiff = thisWallAngle - thatWallAngle;
-  const moveX = thisWallCenter.x - thatWallCenter.x;
-  const moveY = thisWallCenter.y - thatWallCenter.y;
-
-  renderColumn(
-    sectorId,
-    sectors,
-    moveAndRotateCamera(ray, -moveX, -moveY, -angleDiff, thatWallCenter),
-    moveAndRotateCamera(camera, -moveX, -moveY, -angleDiff, thatWallCenter),
-    screenOffset,
-    screenWidth,
-    context,
-  );
+  renderColumn(sectorId, sectors, movedRay, movedCamera, screenOffset, screenWidth, context);
 }
 
 function renderWall(
@@ -99,7 +84,7 @@ export function renderColumn(
 
     nearestWall = rayCross.distance;
 
-    if (wall.portal !== null && wall.portal !== undefined) {
+    if (isWallHasPortal(wall)) {
       renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context);
     } else {
       renderWall(

@@ -42,15 +42,3 @@ export function rotateWall({ p1, p2, color, portal }: Wall, center: Point, angle
     portal,
   };
 }
-
-export function moveAndRotateCamera(
-  camera: Camera,
-  moveX: number,
-  moveY: number,
-  angle: number,
-  center: Point,
-): Camera {
-  const movedCamera = { ...camera, x: camera.x + moveX, y: camera.y + moveY };
-  const newCenter = rotatePoint(movedCamera, center, angle);
-  return { ...camera, angle: camera.angle + angle, ...newCenter };
-}
