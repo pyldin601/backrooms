@@ -13,11 +13,11 @@ export function moveCameraInRelationToPortal(thisWall: Wall, thatWall: Wall, cam
   const thisWallCenter = getWallCenter(thisWall);
   const thatWallCenter = getWallCenter(thatWall);
 
-  const angleDiff =  thatWallAngle - thisWallAngle;
+  const angleDiff = thisWallAngle - thatWallAngle;
   const moveX = thisWallCenter.x - thatWallCenter.x;
   const moveY = thisWallCenter.y - thatWallCenter.y;
 
-  return moveAndRotateCamera(camera, moveX, moveY, angleDiff, thatWallCenter);
+  return moveAndRotateCamera(camera, moveX, moveY, angleDiff - Math.PI, thatWallCenter);
 }
 
 export function moveAndRotateCamera(
