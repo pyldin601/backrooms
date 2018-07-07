@@ -1,5 +1,5 @@
 // @flow
-import type { Point } from './types';
+import type { Point, Wall } from './types';
 
 function area(a: Point, b: Point, c: Point): number {
   return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
@@ -11,9 +11,13 @@ function isIntersect(a: number, b: number, c: number, d: number): boolean {
   return Math.max(x1, x3) <= Math.min(x2, x4);
 }
 
-export function intersect(p1: Point, p2: Point, p3: Point, p4: Point): boolean {
+function intersect(p1: Point, p2: Point, p3: Point, p4: Point): boolean {
   return isIntersect(p1.x, p2.x, p3.x, p4.x)
     && isIntersect(p1.y, p2.y, p3.y, p4.y)
     && area(p1, p2, p3) * area(p1, p2, p4) <= 0
     && area(p3, p4, p1) * area(p3, p4, p2) <= 0;
+}
+
+export function isClipTheWall(oldPos: Point, newPos: Point, wall: Wall): boolean {
+  return intersect(oldPos, newPos, wall.p1, wall.p2);
 }
