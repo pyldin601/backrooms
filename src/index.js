@@ -8,7 +8,7 @@ import renderTransformed from './game/view/transformed';
 import renderPerspective from './game/view/perspective';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from './consts';
 
-const generator$ = interval(Scheduler.requestAnimationFrame).pipe(
+const generator$ = interval(100, Scheduler.requestAnimationFrame).pipe(
   withLatestFrom(createKeysStream(), takeSecond()),
 );
 
