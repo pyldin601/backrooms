@@ -4,27 +4,51 @@ import type { GameStateInterface, KeysStateInterface, PlayerStateInterface } fro
 import initialState from './initial-state';
 import { movePoint } from '../util/geometry';
 import { PLAYER_TURN_STEP, PLAYER_SPEED } from '../consts';
+import type { Map } from './core/types';
 
-function movePlayer(player: PlayerStateInterface, keysState: KeysStateInterface, deltaMs: number) {
+function movePlayerPosition(player: PlayerStateInterface, map: Map, moveSpeed: number, moveAngle: number) {
+  const { x, y, angle, sectorId } = player.position;
+
+  const sector = map.sectors[player.position.sectorId];
+
+  player.position = { angle, ...movePoint({ x, y }, moveSpeed, moveAngle), sectorId };
+}
+
+function movePlayer({ player, map }: GameStateInterface, keysState: KeysStateInterface, deltaMs: number) {
   const walkSpeed = PLAYER_SPEED / 16 * deltaMs;
   const turnSpeed = PLAYER_TURN_STEP / 16 * deltaMs;
 
-  if (keysState.ArrowDown) {
-    const { x, y, angle, sectorId } = player.position;
-    player.position = { angle, ...movePoint({ x, y }, walkSpeed, angle), sectorId };
-  }
-
+  // Forward
   if (keysState.ArrowUp) {
-    const { x, y, angle, sectorId } = player.position;
-    player.position = { angle, ...movePoint({ x, y }, -walkSpeed, angle), sectorId };
+    movePlayerPosition(player, map, walkSpeed, player.position.angle);
   }
 
-  if (keysState.ArrowLeft) {
-    player.position.angle -= turnSpeed;
+  // Backward
+  if (keysState.ArrowDown) {
+    movePlayerPosition(player, map, walkSpeed, player.position.angle - Math.PI);
   }
 
-  if (keysState.ArrowRight) {
-    player.position.angle += turnSpeed;
+
+  if (keysState.Alt) {
+    // Strafe left
+    if (keysState.ArrowLeft) {
+      movePlayerPosition(player, map, walkSpeed, player.position.angle - Math.PI / 2);
+    }
+
+    // Strafe right
+    if (keysState.ArrowRight) {
+      movePlayerPosition(player, map, walkSpeed, player.position.angle + Math.PI / 2);
+    }
+  } else {
+    // Turn left
+    if (keysState.ArrowLeft) {
+      player.position.angle -= turnSpeed;
+    }
+
+    // Turn right
+    if (keysState.ArrowRight) {
+      player.position.angle += turnSpeed;
+    }
   }
 }
 
@@ -35,7 +59,7 @@ interface ReducerState {
 
 function reduce({ time, state }: ReducerState, keysState: KeysStateInterface): ReducerState {
   const now = Date.now();
-  movePlayer(state.player, keysState, now - time);
+  movePlayer(state, keysState, now - time);
   return { time: now, state };
 }
 

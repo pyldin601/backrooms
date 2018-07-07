@@ -24,4 +24,5 @@ export type KeysStateInterface = {|
   ArrowRight: boolean,
   ArrowUp: boolean,
   ArrowDown: boolean,
+  Alt: boolean,
 |};

@@ -8,9 +8,10 @@ const initialKeysState = {
   ArrowRight: false,
   ArrowUp: false,
   ArrowDown: false,
+  Alt: false,
 };
 
-const allowedKeys = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']);
+const allowedKeys = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Alt']);
 
 export function createKeysStream(): Observable<KeysStateInterface> {
   const downs$ = fromEvent(document, 'keydown');
