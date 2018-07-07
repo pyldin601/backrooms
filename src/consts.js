@@ -8,3 +8,5 @@ export const PERSPECTIVE_HEIGHT = 100;
 // PLAYER MOVING CONSTS
 export const PLAYER_SPEED = .4;
 export const PLAYER_TURN_STEP = .03;
+
+export const RENDER_DISTANCE = 4096;

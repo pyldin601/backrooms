@@ -1,6 +1,6 @@
 // @flow
 import type { Sector, Camera, Ray, Wall, RayCross } from './types';
-import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
+import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT, RENDER_DISTANCE } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
 import { isWallHasPortal, moveCameraInRelationToPortal } from './portal';
@@ -78,7 +78,7 @@ export function renderColumn(
   for (const wall of sectors[sectorId].walls) {
     const rayCross = crossTheWall(ray, wall);
 
-    if (rayCross === null || rayCross.distance >= nearestWall) {
+    if (rayCross === null || rayCross.distance >= nearestWall || rayCross.distance > RENDER_DISTANCE) {
       continue;
     }
 
