@@ -5,24 +5,10 @@ import initialState from './initial-state';
 import { movePoint } from '../util/geometry';
 import { PLAYER_TURN_STEP, PLAYER_SPEED } from '../consts';
 import type { Map, Point, Wall } from './core/types';
-
-type Side = 'left' | 'on' | 'right';
-
-/**
- * Reference: http://www.cyberforum.ru/post3457656.html
- */
-function getSide(point: Point, wall: Wall): Side {
-  const d = (point.x - wall.p1.x) * (wall.p2.y - wall.p1.y) - (point.y - wall.p1.y) * (wall.p2.x - wall.p1.x);
-
-  if (d === 0) {
-    return 'on';
-  }
-
-  return d < 0 ? 'left' : 'right';
-}
+import { intersect } from './core/collision';
 
 function isPlayerClipTheWall(oldPos: Point, newPos: Point, wall: Wall): boolean {
-  return getSide(oldPos, wall) !== getSide(newPos, wall);
+  return intersect(oldPos, newPos, wall.p1, wall.p2);
 }
 
 function movePlayerPosition(player: PlayerStateInterface, map: Map, moveSpeed: number, moveAngle: number) {
