@@ -45,8 +45,8 @@ function renderWall(
   context: CanvasRenderingContext2D,
 ) {
   const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
-  const perspectiveHeight =
-    (PERSPECTIVE_HEIGHT / lensDistance) * (sectors[sectorId].height / HEIGHT_RATIO);
+  const heightScale = PERSPECTIVE_HEIGHT / lensDistance;
+  const perspectiveHeight = heightScale * (sectors[sectorId].height / HEIGHT_RATIO);
 
   context.save();
 
