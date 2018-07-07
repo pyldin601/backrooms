@@ -1,12 +1,13 @@
 // @flow
 import type { Sector, Camera, Ray, Wall, RayCross } from './types';
-import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT, RENDER_DISTANCE } from '../../consts';
+import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
 import { isWallHasPortal, moveCameraInRelationToPortal } from './portal';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
+export const RENDER_DISTANCE = 4096;
 
 function renderPortal(
   wall: Wall,
