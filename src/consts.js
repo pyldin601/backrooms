@@ -1,6 +1,6 @@
 // CANVAS SIZE CONSTS
-export const CANVAS_WIDTH = 100;
-export const CANVAS_HEIGHT = 100;
+export const CANVAS_WIDTH = 200;
+export const CANVAS_HEIGHT = 200;
 
 export const PERSPECTIVE_WIDTH = 200;
 export const PERSPECTIVE_HEIGHT = 100;
