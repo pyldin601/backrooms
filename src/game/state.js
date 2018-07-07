@@ -1,13 +1,15 @@
 // @flow
 import type { Sector } from '../game/core/types';
 
+export type PlayerPosition = {|
+  x: number;
+  y: number;
+  angle: number;
+  sectorId: number;
+|};
+
 export type PlayerStateInterface = {|
-  position: {
-    x: number;
-    y: number;
-    angle: number;
-    sectorId: number;
-  };
+  position: PlayerPosition;
 |}
 
 export type MapStateInterface = {|
