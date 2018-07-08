@@ -2,7 +2,7 @@
 import type { Camera, Point, Wall } from './types';
 import { getLineAngle, getLineCenter, rotatePoint } from '../../util/geometry';
 
-export function isWallHasPortal(wall: Wall): boolean {
+export function hasWallPortal(wall: Wall): boolean {
   return wall.portal !== null && wall.portal !== undefined;
 }
 

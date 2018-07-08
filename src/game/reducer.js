@@ -5,8 +5,8 @@ import initialState from './initial-state';
 import { movePoint } from '../util/geometry';
 import { PLAYER_TURN_STEP, PLAYER_SPEED } from '../consts';
 import type { Map, Point, Wall } from './core/types';
-import { isClipTheWall } from './core/collision';
-import { isWallHasPortal, moveCameraInRelationToPortal } from './core/portal';
+import { willClipTheWall } from './core/collision';
+import { hasWallPortal, moveCameraInRelationToPortal } from './core/portal';
 
 
 function movePlayerPosition(player: PlayerStateInterface, map: Map, moveSpeed: number, moveAngle: number) {
@@ -16,14 +16,14 @@ function movePlayerPosition(player: PlayerStateInterface, map: Map, moveSpeed: n
 
   const sector = map.sectors[player.position.sectorId];
 
-  const clippedWall = sector.walls.find(wall => isClipTheWall(originalPosition, newPosition, wall));
+  const clippedWall = sector.walls.find(wall => willClipTheWall(originalPosition, newPosition, wall));
 
   if (!clippedWall) {
     player.position = { angle, sectorId, ...newPosition };
     return;
   }
 
-  if (isWallHasPortal(clippedWall)) {
+  if (hasWallPortal(clippedWall)) {
     const { sectorId, wallId } = clippedWall.portal;
     const thatWall = map.sectors[sectorId].walls[wallId];
     const positionBehindPortal = moveCameraInRelationToPortal(clippedWall, thatWall, { ...newPosition, angle });

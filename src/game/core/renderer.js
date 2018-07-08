@@ -3,7 +3,7 @@ import type { Sector, Camera, Ray, Wall, RayCross } from './types';
 import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
-import { isWallHasPortal, moveCameraInRelationToPortal } from './portal';
+import { hasWallPortal, moveCameraInRelationToPortal } from './portal';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
@@ -85,7 +85,7 @@ export function renderColumn(
 
     nearestWall = rayCross.distance;
 
-    if (isWallHasPortal(wall)) {
+    if (hasWallPortal(wall)) {
       renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context);
     } else {
       renderWall(

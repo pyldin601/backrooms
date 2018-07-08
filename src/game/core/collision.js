@@ -18,6 +18,6 @@ function intersect(p1: Point, p2: Point, p3: Point, p4: Point): boolean {
     && area(p3, p4, p1) * area(p3, p4, p2) <= 0;
 }
 
-export function isClipTheWall(oldPos: Point, newPos: Point, wall: Wall): boolean {
-  return intersect(oldPos, newPos, wall.p1, wall.p2);
+export function willClipTheWall(startPoint: Point, endPoint: Point, wall: Wall): boolean {
+  return intersect(startPoint, endPoint, wall.p1, wall.p2);
 }
