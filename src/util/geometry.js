@@ -51,3 +51,14 @@ export function movePoint(point: Point, amount: number, angle: number): Point {
     y: point.y + amount * s,
   };
 }
+
+export function getDistanceFromPointToLine(line: Line, point: Point): number {
+  return (
+    Math.abs(
+      (line.p2.y - line.p1.y) * point.x -
+        (line.p2.x - line.p1.x) * point.y +
+        line.p2.x * line.p1.y -
+        line.p2.y * line.p1.x,
+    ) / Math.sqrt(Math.pow(line.p2.y - line.p1.y, 2) + Math.pow(line.p2.x - line.p1.x, 2))
+  );
+}
