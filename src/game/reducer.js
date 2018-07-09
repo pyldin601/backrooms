@@ -2,38 +2,34 @@
 import { scan } from 'rxjs/operators';
 import type { GameStateInterface, KeysStateInterface, PlayerStateInterface } from './state';
 import initialState from './initial-state';
-import { movePoint } from '../util/geometry';
 import { PLAYER_TURN_STEP, PLAYER_SPEED } from '../consts';
-import type { Map, Point, Wall } from './core/types';
-import { willClipTheWall } from './core/collision';
-import { hasWallPortal, moveCameraInRelationToPortal } from './core/portal';
+import type { Map } from './core/types';
+import { movePlayerOnMap } from './interact/move';
 
-
-function movePlayerPosition(player: PlayerStateInterface, map: Map, moveSpeed: number, moveAngle: number) {
-  const { x, y, angle, sectorId } = player.position;
-  const originalPosition = { x, y };
-  const newPosition = movePoint(originalPosition, moveSpeed, moveAngle);
-
-  const sector = map.sectors[player.position.sectorId];
-
-  const clippedWall = sector.walls.find(wall => willClipTheWall(originalPosition, newPosition, wall));
-
-  if (!clippedWall) {
-    player.position = { angle, sectorId, ...newPosition };
-    return;
-  }
-
-  if (hasWallPortal(clippedWall)) {
-    const { sectorId, wallId } = clippedWall.portal;
-    const thatWall = map.sectors[sectorId].walls[wallId];
-    const positionBehindPortal = moveCameraInRelationToPortal(clippedWall, thatWall, { ...newPosition, angle });
-    player.position = { ...positionBehindPortal, sectorId };
-  }
+function movePlayerPosition(
+  player: PlayerStateInterface,
+  map: Map,
+  moveSpeed: number,
+  moveAngle: number,
+) {
+  const playerSector = map.sectors[player.position.sectorId];
+  player.position = movePlayerOnMap(
+    player.position,
+    moveSpeed,
+    moveAngle,
+    player.position.sectorId,
+    playerSector,
+    map,
+  );
 }
 
-function movePlayer({ player, map }: GameStateInterface, keysState: KeysStateInterface, deltaMs: number) {
-  const walkSpeed = PLAYER_SPEED / 16 * deltaMs;
-  const turnSpeed = PLAYER_TURN_STEP / 16 * deltaMs;
+function movePlayer(
+  { player, map }: GameStateInterface,
+  keysState: KeysStateInterface,
+  deltaMs: number,
+) {
+  const walkSpeed = (PLAYER_SPEED / 16) * deltaMs;
+  const turnSpeed = (PLAYER_TURN_STEP / 16) * deltaMs;
 
   // Forward
   if (keysState.ArrowUp) {
@@ -44,7 +40,6 @@ function movePlayer({ player, map }: GameStateInterface, keysState: KeysStateInt
   if (keysState.ArrowDown) {
     movePlayerPosition(player, map, walkSpeed, player.position.angle - Math.PI);
   }
-
 
   if (keysState.Alt) {
     // Strafe left

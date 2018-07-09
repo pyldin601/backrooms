@@ -1,9 +1,13 @@
 // @flow
-import type { Camera, Point, Wall } from './types';
+import type { Camera, Point, Portal, Wall } from './types';
 import { getLineAngle, getLineCenter, rotatePoint } from '../../util/geometry';
 
-export function hasWallPortal(wall: Wall): boolean {
+export function hasWallPortal(wall: Wall): boolean %checks {
   return wall.portal !== null && wall.portal !== undefined;
+}
+
+export function isPortal(portal: ?Portal): boolean %checks {
+  return portal !== null && portal !== undefined;
 }
 
 export function moveCameraInRelationToPortal(thisWall: Wall, thatWall: Wall, camera: Camera): Camera {
