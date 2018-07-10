@@ -1,4 +1,6 @@
 // @flow
+export type Axis = "x" | "y";
+
 export type Point = {
   x: number,
   y: number,
@@ -8,6 +10,8 @@ export type Line = {
   p1: Point,
   p2: Point,
 };
+
+export const AXIS_LIST: Axis[] = ['x', 'y'];
 
 export function getLineAngle(line: Line): number {
   const a = line.p1.x - line.p2.x;
@@ -42,23 +46,18 @@ export function rotatePoint(point: Point, center: Point, angle: number): Point {
   };
 }
 
-export function movePoint(point: Point, amount: number, angle: number): Point {
+export function movePoint(point: Point, amount: number, angle: number, axis?: Axis): Point {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
 
-  return {
+  const newPoint = {
     x: point.x + amount * c,
     y: point.y + amount * s,
   };
-}
 
-export function getDistanceFromPointToLine(line: Line, point: Point): number {
-  return (
-    Math.abs(
-      (line.p2.y - line.p1.y) * point.x -
-        (line.p2.x - line.p1.x) * point.y +
-        line.p2.x * line.p1.y -
-        line.p2.y * line.p1.x,
-    ) / Math.sqrt(Math.pow(line.p2.y - line.p1.y, 2) + Math.pow(line.p2.x - line.p1.x, 2))
-  );
+  if (axis === null || axis === undefined) {
+    return newPoint;
+  }
+
+  return { ...point, [axis]: newPoint[axis] };
 }
