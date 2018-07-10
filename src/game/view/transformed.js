@@ -35,18 +35,36 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
     sector.walls.forEach(wall => {
       context.save();
       context.beginPath();
-      moveTo(context, rotatePoint({ x: wall.p1.x - diffX, y: wall.p1.y - diffY }, playerPosition, -angle));
-      lineTo(context, rotatePoint({ x: wall.p2.x - diffX, y: wall.p2.y - diffY }, playerPosition, -angle));
-      context.strokeStyle = wall.portal ? '#DD00DD' :  wall.color;
+      moveTo(
+        context,
+        rotatePoint({ x: wall.p1.x - diffX, y: wall.p1.y - diffY }, playerPosition, -angle),
+      );
+      lineTo(
+        context,
+        rotatePoint({ x: wall.p2.x - diffX, y: wall.p2.y - diffY }, playerPosition, -angle),
+      );
+      context.strokeStyle = wall.portal ? '#DD00DD' : wall.color;
       context.stroke();
       context.restore();
     });
   });
+}
 
+function renderPosition(
+  context: CanvasRenderingContext2D,
+  { player: { position } }: GameStateInterface,
+) {
+  const positionText = `(${position.x.toFixed(0)}, ${position.y.toFixed(0)})`;
+  context.save();
+  context.fillStyle = '#ff8800';
+  context.fillText(positionText, 2, 10);
+  context.fill();
+  context.restore();
 }
 
 export default function render(context: CanvasRenderingContext2D, game: GameStateInterface) {
   context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   renderMap(context, game);
   renderPlayer(context, game);
+  renderPosition(context, game);
 }

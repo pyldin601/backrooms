@@ -11,9 +11,9 @@ function movePlayerPosition(
   map: Map,
   moveSpeed: number,
   moveAngle: number,
-) {
+): PlayerStateInterface {
   const playerSector = map.sectors[player.position.sectorId];
-  player.position = movePlayerOnMap(
+  const position = movePlayerOnMap(
     player.position,
     moveSpeed,
     moveAngle,
@@ -21,47 +21,74 @@ function movePlayerPosition(
     playerSector,
     map,
   );
+  return { ...player, position };
+}
+
+function turnPlayer(player: PlayerStateInterface, turnAngle: number): PlayerStateInterface {
+  const position = { ...player.position, angle: player.position.angle + turnAngle };
+  return { ...player, position };
 }
 
 function movePlayer(
-  { player, map }: GameStateInterface,
+  gameState: GameStateInterface,
   keysState: KeysStateInterface,
   deltaMs: number,
-) {
+): GameStateInterface {
   const walkSpeed = (PLAYER_SPEED / 16) * deltaMs;
   const turnSpeed = (PLAYER_TURN_STEP / 16) * deltaMs;
 
+  const { player, map } = gameState;
+
+  let playerState = player;
+
   // Forward
   if (keysState.ArrowUp) {
-    movePlayerPosition(player, map, walkSpeed, player.position.angle);
+    playerState = movePlayerPosition(playerState, map, walkSpeed, playerState.position.angle);
   }
 
   // Backward
   if (keysState.ArrowDown) {
-    movePlayerPosition(player, map, walkSpeed, player.position.angle - Math.PI);
+    playerState = movePlayerPosition(
+      playerState,
+      map,
+      walkSpeed,
+      playerState.position.angle - Math.PI,
+    );
   }
 
   if (keysState.Alt) {
     // Strafe left
     if (keysState.ArrowLeft) {
-      movePlayerPosition(player, map, walkSpeed, player.position.angle - Math.PI / 2);
+      playerState = movePlayerPosition(
+        playerState,
+        map,
+        walkSpeed,
+        playerState.position.angle - Math.PI / 2,
+      );
     }
 
     // Strafe right
     if (keysState.ArrowRight) {
-      movePlayerPosition(player, map, walkSpeed, player.position.angle + Math.PI / 2);
+      playerState = movePlayerPosition(
+        playerState,
+        map,
+        walkSpeed,
+        playerState.position.angle + Math.PI / 2,
+      );
     }
   } else {
     // Turn left
     if (keysState.ArrowLeft) {
-      player.position.angle -= turnSpeed;
+      playerState = turnPlayer(playerState, -turnSpeed);
     }
 
     // Turn right
     if (keysState.ArrowRight) {
-      player.position.angle += turnSpeed;
+      playerState = turnPlayer(playerState, turnSpeed);
     }
   }
+
+  return playerState === player ? gameState : { ...gameState, player: playerState };
 }
 
 interface ReducerState {
@@ -71,7 +98,7 @@ interface ReducerState {
 
 function reduce({ time, state }: ReducerState, keysState: KeysStateInterface): ReducerState {
   const now = Date.now();
-  movePlayer(state, keysState, now - time);
+  state = movePlayer(state, keysState, now - time);
   return { time: now, state };
 }
 

@@ -11,7 +11,7 @@ export type Line = {
   p2: Point,
 };
 
-export const AXIS_LIST: Axis[] = ['x', 'y'];
+export const AXES: Axis[] = ['x', 'y'];
 
 export function getLineAngle(line: Line): number {
   const a = line.p1.x - line.p2.x;
