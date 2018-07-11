@@ -1,6 +1,6 @@
 // @flow
-import { interval, Scheduler } from 'rxjs';
-import { withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
+import { interval, Scheduler, Subject } from 'rxjs';
+import { withLatestFrom, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { createKeysStream } from './game/keys';
 import { takeSecond } from './util/projection';
 import { createGameReducer } from './game/reducer';
@@ -11,6 +11,13 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT, PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } fr
 const generator$ = interval(Scheduler.requestAnimationFrame).pipe(
   withLatestFrom(createKeysStream(), takeSecond()),
 );
+
+const reload$ = new Subject();
+
+// for HMR reloading support
+if (module.hot) {
+  module.hot.accept(() => reload$.next());
+}
 
 const prepareCanvasAndGetContext = (canvasId, width, height) => {
   const element = document.getElementById(canvasId);
@@ -38,6 +45,7 @@ const perspectiveContext = prepareCanvasAndGetContext(
 
 generator$
   .pipe(
+    takeUntil(reload$),
     createGameReducer(),
     distinctUntilChanged(null, ({ state }) => state),
   )
@@ -45,5 +53,3 @@ generator$
     renderTransformed(transformedContext, state);
     renderPerspective(perspectiveContext, state);
   });
-
-module.hot && module.hot.accept(() => window.location.reload());
