@@ -10,7 +10,8 @@
     "prebuild": "rimraf dist/*",
     "build": "parcel build public/index.html --public-url ./",
     "deploy": "gh-pages -d dist",
-    "flow-typed": "flow-typed"
+    "flow-typed": "flow-typed",
+    "postinstall": "npm run flow-typed install"
   },
   "keywords": [],
   "author": "",
