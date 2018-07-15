@@ -87,7 +87,7 @@ export function renderColumn(
     context.save();
     context.beginPath();
     context.fillStyle = DEFAULT_CEILING_COLOR;
-    context.fillRect(screenOffset, 0, screenWidth, PERSPECTIVE_HEIGHT / 2 - perspectiveHeight);
+    context.fillRect(screenOffset, 0, screenWidth, PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1);
     context.closePath();
     context.fill();
     context.restore();
@@ -98,9 +98,9 @@ export function renderColumn(
     context.fillStyle = DEFAULT_FLOOR_COLOR;
     context.fillRect(
       screenOffset,
-      PERSPECTIVE_HEIGHT / 2 + perspectiveHeight,
+      PERSPECTIVE_HEIGHT / 2 + perspectiveHeight - 1,
       screenWidth,
-      PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
+      PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1,
     );
     context.closePath();
     context.fill();
