@@ -8,7 +8,7 @@
     "prestart": "npm run clean",
     "start": "parcel public/index.html",
     "prebuild": "rimraf dist/*",
-    "build": "parcel build public/index.html --public-url ./",
+    "build": "parcel build public/index.html --experimental-scope-hoisting --public-url ./",
     "deploy": "gh-pages -d dist",
     "flow-typed": "flow-typed",
     "postinstall": "npm run flow-typed install"
