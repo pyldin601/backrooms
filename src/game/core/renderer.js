@@ -9,6 +9,9 @@ export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
 export const RENDER_DISTANCE = 4096;
 
+export const DEFAULT_CEILING_COLOR = '#009aff';
+export const DEFAULT_FLOOR_COLOR = '#2a2a2a';
+
 function renderPortal(
   wall: Wall,
   sectors: Sector[],
@@ -34,37 +37,6 @@ function renderPortal(
   renderColumn(sectorId, sectors, movedRay, movedCamera, screenOffset, screenWidth, context);
 }
 
-function renderWall(
-  rayCross: RayCross,
-  camera: Camera,
-  ray: Camera,
-  sectors: Sector[],
-  sectorId: number,
-  wall: Wall,
-  screenOffset: number,
-  screenWidth: number,
-  context: CanvasRenderingContext2D,
-) {
-  const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
-  const heightScale = PERSPECTIVE_HEIGHT / lensDistance;
-  const perspectiveHeight = heightScale * (sectors[sectorId].height / HEIGHT_RATIO);
-
-  context.save();
-
-  context.beginPath();
-  context.fillStyle = darken(wall.color, Math.sqrt(rayCross.distance) * 6);
-  context.fillRect(
-    screenOffset,
-    PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
-    screenWidth,
-    perspectiveHeight * 2,
-  );
-  context.closePath();
-  context.fill();
-
-  context.restore();
-}
-
 export function renderColumn(
   sectorId: number,
   sectors: Sector[],
@@ -79,27 +51,60 @@ export function renderColumn(
   for (const wall of sectors[sectorId].walls) {
     const rayCross = crossTheWall(ray, wall);
 
-    if (rayCross === null || rayCross.distance >= nearestWall || rayCross.distance > RENDER_DISTANCE) {
+    if (
+      rayCross === null ||
+      rayCross.distance >= nearestWall ||
+      rayCross.distance > RENDER_DISTANCE
+    ) {
       continue;
     }
 
     nearestWall = rayCross.distance;
 
+    const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
+    const heightScale = PERSPECTIVE_HEIGHT / lensDistance;
+    const perspectiveHeight = heightScale * (sectors[sectorId].height / HEIGHT_RATIO);
+
     if (hasWallPortal(wall)) {
       renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context);
     } else {
-      renderWall(
-        rayCross,
-        camera,
-        ray,
-        sectors,
-        sectorId,
-        wall,
+      // Render wall
+      context.save();
+      context.beginPath();
+      context.fillStyle = darken(wall.color, Math.sqrt(rayCross.distance) * 6);
+      context.fillRect(
         screenOffset,
+        PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
         screenWidth,
-        context,
+        perspectiveHeight * 2,
       );
+      context.closePath();
+      context.fill();
+      context.restore();
     }
+
+    // Render ceiling
+    context.save();
+    context.beginPath();
+    context.fillStyle = DEFAULT_CEILING_COLOR;
+    context.fillRect(screenOffset, 0, screenWidth, PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1);
+    context.closePath();
+    context.fill();
+    context.restore();
+
+    // Render floor
+    context.save();
+    context.beginPath();
+    context.fillStyle = DEFAULT_FLOOR_COLOR;
+    context.fillRect(
+      screenOffset,
+      PERSPECTIVE_HEIGHT / 2 + perspectiveHeight - 1,
+      screenWidth,
+      PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1,
+    );
+    context.closePath();
+    context.fill();
+    context.restore();
   }
 }
 
