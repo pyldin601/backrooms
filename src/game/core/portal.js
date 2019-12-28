@@ -3,7 +3,7 @@ import type { Camera, Point, Portal, Wall } from './types';
 import { getLineAngle, getLineCenter, rotatePoint } from '../../util/geometry';
 
 export function hasWallPortal(wall: Wall): boolean %checks {
-  return wall.portal !== null && wall.portal !== undefined;
+  return isPortal(wall.portal);
 }
 
 export function isPortal(portal: ?Portal): boolean %checks {

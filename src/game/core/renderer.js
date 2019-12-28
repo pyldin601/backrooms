@@ -46,9 +46,11 @@ export function renderColumn(
   screenWidth: number,
   context: CanvasRenderingContext2D,
 ) {
+  const currentSector = sectors[sectorId];
+
   let nearestWall = Infinity;
 
-  for (const wall of sectors[sectorId].walls) {
+  for (const wall of currentSector.walls) {
     const rayCross = crossTheWall(ray, wall);
 
     if (
@@ -63,10 +65,33 @@ export function renderColumn(
 
     const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
     const heightScale = PERSPECTIVE_HEIGHT / lensDistance;
-    const perspectiveHeight = heightScale * (sectors[sectorId].height / HEIGHT_RATIO);
+    const perspectiveHeight = heightScale * (currentSector.height / HEIGHT_RATIO);
 
     if (hasWallPortal(wall)) {
+      const sectorAfterPortal = sectors[wall.portal.sectorId];
       renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context);
+      if (sectorAfterPortal.height < currentSector.height) {
+        const portalPerspectiveHeight = heightScale * (sectorAfterPortal.height / HEIGHT_RATIO);
+        // render top and bottom parts of wall
+        context.save();
+        context.beginPath();
+        context.fillStyle = darken(wall.color, Math.sqrt(rayCross.distance) * 6);
+        context.fillRect(
+          screenOffset,
+          0,
+          screenWidth,
+          PERSPECTIVE_HEIGHT / 2 - portalPerspectiveHeight,
+        );
+        context.fillRect(
+          screenOffset,
+          PERSPECTIVE_HEIGHT / 2 + portalPerspectiveHeight,
+          screenWidth,
+          PERSPECTIVE_HEIGHT / 2 + perspectiveHeight,
+        );
+        context.closePath();
+        context.fill();
+        context.restore();
+      }
     } else {
       // Render wall
       context.save();
