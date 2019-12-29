@@ -127,19 +127,7 @@ export function renderColumn(
     context.fill();
     context.restore();
 
-    // Render floor
-    context.save();
-    context.beginPath();
-    context.fillStyle = DEFAULT_FLOOR_COLOR;
-    context.fillRect(
-      screenOffset,
-      PERSPECTIVE_HEIGHT / 2 + perspectiveHeight - 1,
-      screenWidth,
-      PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1,
-    );
-    context.closePath();
-    context.fill();
-    context.restore();
+    renderFloor(context, camera, screenOffset, screenWidth, perspectiveHeight);
   }
 }
 
@@ -158,4 +146,26 @@ export function renderSector(
     };
     renderColumn(sectorId, sectors, ray, camera, i, 1, context);
   }
+}
+
+export function renderFloor(
+  context: CanvasRenderingContext2D,
+  camera: Camera,
+  screenOffset: number,
+  screenWidth: number,
+  perspectiveHeight: number,
+) {
+  // Render floor
+  context.save();
+  context.beginPath();
+  context.fillStyle = DEFAULT_FLOOR_COLOR;
+  context.fillRect(
+    screenOffset,
+    PERSPECTIVE_HEIGHT / 2 + perspectiveHeight - 1,
+    screenWidth,
+    PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1,
+  );
+  context.closePath();
+  context.fill();
+  context.restore();
 }
