@@ -4,6 +4,7 @@ import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
 import { hasWallPortal, moveCameraInRelationToPortal } from './portal';
+import wallsImageFile from '../../images/walls.png';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
@@ -11,6 +12,16 @@ export const RENDER_DISTANCE = 4096;
 
 export const DEFAULT_CEILING_COLOR = '#009aff';
 export const DEFAULT_FLOOR_COLOR = '#2a2a2a';
+
+function loadImage(src: string): Image {
+  const image = new Image();
+
+  image.src = src;
+
+  return image;
+}
+
+const i = loadImage(wallsImageFile);
 
 function renderPortal(
   wall: Wall,
@@ -94,18 +105,17 @@ export function renderColumn(
       }
     } else {
       // Render wall
-      context.save();
-      context.beginPath();
-      context.fillStyle = darken(wall.color, Math.sqrt(rayCross.distance) * 6);
-      context.fillRect(
+      context.drawImage(
+        i,
+        64 * rayCross.offset,
+        1,
+        1,
+        64,
         screenOffset,
         PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
-        screenWidth,
+        1,
         perspectiveHeight * 2,
       );
-      context.closePath();
-      context.fill();
-      context.restore();
     }
 
     // Render ceiling
