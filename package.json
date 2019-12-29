@@ -19,7 +19,6 @@
   "dependencies": {
     "flow-bin": "^0.75.0",
     "lodash": "^4.17.15",
-    "parcel": "^1.12.4",
     "rxjs": "^6.5.4"
   },
   "devDependencies": {
@@ -29,6 +28,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "flow-typed": "^2.6.2",
     "gh-pages": "^1.2.0",
+    "parcel-bundler": "^1.12.4",
     "prettier": "^1.19.1",
     "rimraf": "^2.7.1"
   }
