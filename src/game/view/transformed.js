@@ -54,7 +54,10 @@ function renderPosition(
   context: CanvasRenderingContext2D,
   { player: { position } }: GameStateInterface,
 ) {
-  const positionText = `(${position.x.toFixed(0)}, ${position.y.toFixed(0)})`;
+  const playerAngle = 360 / Math.PI * position.angle / 2;
+  const positionText = `(${[position.x, position.y, position.z, playerAngle]
+    .map(n => n.toFixed(0))
+    .join(', ')})`;
   context.save();
   context.fillStyle = '#ff8800';
   context.fillText(positionText, 2, 10);

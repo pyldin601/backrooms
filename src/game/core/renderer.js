@@ -78,6 +78,9 @@ export function renderColumn(
     const heightScale = PERSPECTIVE_HEIGHT / lensDistance;
     const perspectiveHeight = heightScale * (currentSector.height / HEIGHT_RATIO);
 
+    renderCeiling(context, camera, screenOffset, screenWidth, perspectiveHeight);
+    renderFloor(context, camera, screenOffset, screenWidth, perspectiveHeight);
+
     if (hasWallPortal(wall)) {
       const sectorAfterPortal = sectors[wall.portal.sectorId];
       renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context);
@@ -118,8 +121,6 @@ export function renderColumn(
       );
     }
 
-    renderCeiling(context, camera, screenOffset, screenWidth, perspectiveHeight);
-    renderFloor(context, camera, screenOffset, screenWidth, perspectiveHeight);
   }
 }
 
@@ -152,9 +153,9 @@ export function renderFloor(
   context.fillStyle = DEFAULT_FLOOR_COLOR;
   context.fillRect(
     screenOffset,
-    PERSPECTIVE_HEIGHT / 2 + perspectiveHeight - 1,
+    PERSPECTIVE_HEIGHT / 2,
     screenWidth,
-    PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1,
+    PERSPECTIVE_HEIGHT / 2,
   );
   context.closePath();
   context.fill();
@@ -171,7 +172,7 @@ export function renderCeiling(
   context.save();
   context.beginPath();
   context.fillStyle = DEFAULT_CEILING_COLOR;
-  context.fillRect(screenOffset, 0, screenWidth, PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1);
+  context.fillRect(screenOffset, 0, screenWidth, PERSPECTIVE_HEIGHT / 2);
   context.closePath();
   context.fill();
   context.restore();

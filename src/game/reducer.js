@@ -26,7 +26,8 @@ function movePlayerPosition(
 }
 
 function turnPlayer(player: PlayerStateInterface, turnAngle: number): PlayerStateInterface {
-  const position = { ...player.position, angle: player.position.angle + turnAngle };
+  const tpi = 2 * Math.PI;
+  const position = { ...player.position, angle: (player.position.angle + turnAngle + tpi) % tpi };
   return { ...player, position };
 }
 

@@ -10,6 +10,7 @@ const initialState: GameStateInterface = {
     position: {
       x: 10,
       y: 25,
+      z: 5,
       angle: 0,
       sectorId: 0,
     },

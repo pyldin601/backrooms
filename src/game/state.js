@@ -4,6 +4,7 @@ import type { Sector } from '../game/core/types';
 export type PlayerPosition = {|
   x: number;
   y: number;
+  z: number;
   angle: number;
   sectorId: number;
 |};
