@@ -118,15 +118,7 @@ export function renderColumn(
       );
     }
 
-    // Render ceiling
-    context.save();
-    context.beginPath();
-    context.fillStyle = DEFAULT_CEILING_COLOR;
-    context.fillRect(screenOffset, 0, screenWidth, PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1);
-    context.closePath();
-    context.fill();
-    context.restore();
-
+    renderCeiling(context, camera, screenOffset, screenWidth, perspectiveHeight);
     renderFloor(context, camera, screenOffset, screenWidth, perspectiveHeight);
   }
 }
@@ -155,7 +147,6 @@ export function renderFloor(
   screenWidth: number,
   perspectiveHeight: number,
 ) {
-  // Render floor
   context.save();
   context.beginPath();
   context.fillStyle = DEFAULT_FLOOR_COLOR;
@@ -165,6 +156,22 @@ export function renderFloor(
     screenWidth,
     PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1,
   );
+  context.closePath();
+  context.fill();
+  context.restore();
+}
+
+export function renderCeiling(
+  context: CanvasRenderingContext2D,
+  camera: Camera,
+  screenOffset: number,
+  screenWidth: number,
+  perspectiveHeight: number,
+) {
+  context.save();
+  context.beginPath();
+  context.fillStyle = DEFAULT_CEILING_COLOR;
+  context.fillRect(screenOffset, 0, screenWidth, PERSPECTIVE_HEIGHT / 2 - perspectiveHeight + 1);
   context.closePath();
   context.fill();
   context.restore();
