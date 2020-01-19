@@ -14,6 +14,7 @@ export interface Wall {
   p2: Point;
   color: string;
   portal: ?Portal;
+  texture: number;
 }
 
 export interface Sector {

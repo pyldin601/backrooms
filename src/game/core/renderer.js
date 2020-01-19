@@ -115,11 +115,12 @@ export function renderColumn(
     } else {
       // Render wall
       const wallLength = getDistanceBetweenPoints(wall.p1, wall.p2);
-      const textureOffset = (wallLength * TEXTURE_MAP_SCALE * rayCross.offset) % TEXTURE_TILE_WIDTH;
+      const textureOffset = TEXTURE_TILE_WIDTH * wall.texture;
+      const textureColumnOffset = textureOffset + (wallLength * TEXTURE_MAP_SCALE * rayCross.offset) % TEXTURE_TILE_WIDTH;
 
       context.drawImage(
         textureImage,
-        textureOffset,
+        textureColumnOffset,
         1,
         1,
         TEXTURE_TILE_HEIGHT,

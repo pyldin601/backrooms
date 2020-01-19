@@ -37,7 +37,7 @@ const initialState: GameStateInterface = {
         wall(point(60, 20), point(60, 0)),
         wall(point(60, 0), point(90, 0)),
         wall(point(90, 0), point(90, 10), getRandomColor(), portal(2, 12)),
-        wall(point(90, 10), point(80, 10)),
+        wall(point(90, 10), point(80, 10), getRandomColor(), null, 4),
         wall(point(80, 10), point(80, 20)),
         wall(point(80, 20), point(90, 20)),
         wall(point(90, 20), point(90, 30), getRandomColor(), portal(1, 0)),

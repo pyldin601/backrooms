@@ -14,8 +14,9 @@ export function wall(
   p2: Point,
   color: string = getRandomColor(),
   portal: ?Portal = null,
+  texture: ?number = 0,
 ): Wall {
-  return { p1, p2, color, portal };
+  return { p1, p2, color, portal, texture };
 }
 
 export function point(x: number, y: number): Point {
