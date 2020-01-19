@@ -1,5 +1,5 @@
 // @flow
-export type Axis = "x" | "y";
+export type Axis = 'x' | 'y';
 
 export type Point = {
   x: number,
@@ -60,4 +60,10 @@ export function movePoint(point: Point, amount: number, angle: number, axis?: Ax
   }
 
   return { ...point, [axis]: newPoint[axis] };
+}
+
+export function getDistanceBetweenPoints(point1: Point, point2: Point): number {
+  const dx = point1.x - point2.x;
+  const dy = point1.y - point2.y;
+  return Math.sqrt(dx * dx + dy * dy);
 }

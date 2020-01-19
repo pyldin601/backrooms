@@ -8,3 +8,7 @@ export const PERSPECTIVE_HEIGHT = 400;
 // PLAYER MOVING CONSTS
 export const PLAYER_SPEED = .4;
 export const PLAYER_TURN_STEP = .03;
+
+export const TEXTURE_MAP_SCALE = 6.4;
+export const TEXTURE_TILE_WIDTH = 64;
+export const TEXTURE_TILE_HEIGHT = 64;

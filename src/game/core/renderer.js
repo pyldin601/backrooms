@@ -1,9 +1,15 @@
 // @flow
 import type { Sector, Camera, Ray, Wall, RayCross } from './types';
-import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
+import {
+  PERSPECTIVE_WIDTH,
+  PERSPECTIVE_HEIGHT,
+  TEXTURE_MAP_SCALE,
+  TEXTURE_TILE_WIDTH, TEXTURE_TILE_HEIGHT,
+} from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
 import { hasWallPortal, moveCameraInRelationToPortal } from './portal';
+import { getDistanceBetweenPoints } from '../../util/geometry';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
@@ -35,7 +41,16 @@ function renderPortal(
   const movedCamera = moveCameraInRelationToPortal(wall, thatWall, camera);
   const movedRay = moveCameraInRelationToPortal(wall, thatWall, ray);
 
-  renderColumn(sectorId, sectors, movedRay, movedCamera, screenOffset, screenWidth, context, textureImage);
+  renderColumn(
+    sectorId,
+    sectors,
+    movedRay,
+    movedCamera,
+    screenOffset,
+    screenWidth,
+    context,
+    textureImage,
+  );
 }
 
 export function renderColumn(
@@ -99,12 +114,15 @@ export function renderColumn(
       }
     } else {
       // Render wall
+      const wallLength = getDistanceBetweenPoints(wall.p1, wall.p2);
+      const textureOffset = (wallLength * TEXTURE_MAP_SCALE * rayCross.offset) % TEXTURE_TILE_WIDTH;
+
       context.drawImage(
         textureImage,
-        64 * rayCross.offset,
+        textureOffset,
         1,
         1,
-        64,
+        TEXTURE_TILE_HEIGHT,
         screenOffset,
         PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
         1,
