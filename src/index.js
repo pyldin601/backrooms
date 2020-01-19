@@ -1,12 +1,16 @@
 // @flow
-import { interval, Scheduler, Subject } from 'rxjs';
-import { withLatestFrom, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { defer, interval, Scheduler, Subject } from 'rxjs';
+import { combineLatest, withLatestFrom, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { createKeysStream } from './game/keys';
 import { takeSecond } from './util/projection';
 import { createGameReducer } from './game/reducer';
 import renderTransformed from './game/view/transformed';
 import renderPerspective from './game/view/perspective';
+import { loadImage } from './util/image';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from './consts';
+import wallsFile from './images/walls.png';
+
+const textureImage$ = defer(() => loadImage(wallsFile));
 
 const generator$ = interval(Scheduler.requestAnimationFrame).pipe(
   withLatestFrom(createKeysStream(), takeSecond()),
@@ -48,8 +52,9 @@ generator$
     takeUntil(reload$),
     createGameReducer(),
     distinctUntilChanged(null, ({ state }) => state),
+    combineLatest(textureImage$)
   )
-  .subscribe(({ time, state }) => {
+  .subscribe(([{ time, state }, textureImage]) => {
     renderTransformed(transformedContext, state);
-    renderPerspective(perspectiveContext, state);
+    renderPerspective(perspectiveContext, state, textureImage);
   });

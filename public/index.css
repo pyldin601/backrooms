@@ -7,28 +7,24 @@ html, body {
 .canvas-list_wrap {
     width: 100vw;
     height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.canvas_wrap {
-    margin: 8px;
-}
-
-.canvas_item {
-    width: 400px;
-    height: 400px;
-    box-sizing: border-box;
-    border: 1px solid #222222;
-    image-rendering: pixelated;
 }
 
 
 .perspective_view {
-    width: 800px;
-    height: 400px;
+    width: 100vw;
+    height: 100vh;
     box-sizing: border-box;
-    border: 1px solid #222222;
     image-rendering: pixelated;
+}
+
+.map_view {
+    background: rgba(0,0,0,0.5);
+
+    margin: 8px;
+    width: 200px;
+    height: 200px;
+    box-sizing: border-box;
+    image-rendering: pixelated;
+
+    position: absolute;
 }

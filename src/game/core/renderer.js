@@ -4,7 +4,6 @@ import { PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
 import { hasWallPortal, moveCameraInRelationToPortal } from './portal';
-import wallsImageFile from '../../images/walls.png';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
@@ -12,16 +11,6 @@ export const RENDER_DISTANCE = 4096;
 
 export const DEFAULT_CEILING_COLOR = '#009aff';
 export const DEFAULT_FLOOR_COLOR = '#2a2a2a';
-
-function loadImage(src: string): Image {
-  const image = new Image();
-
-  image.src = src;
-
-  return image;
-}
-
-const i = loadImage(wallsImageFile);
 
 function renderPortal(
   wall: Wall,
@@ -31,6 +20,7 @@ function renderPortal(
   screenOffset: number,
   screenWidth: number,
   context: CanvasRenderingContext2D,
+  textureImage: Image,
 ) {
   const { portal } = wall;
 
@@ -45,7 +35,7 @@ function renderPortal(
   const movedCamera = moveCameraInRelationToPortal(wall, thatWall, camera);
   const movedRay = moveCameraInRelationToPortal(wall, thatWall, ray);
 
-  renderColumn(sectorId, sectors, movedRay, movedCamera, screenOffset, screenWidth, context);
+  renderColumn(sectorId, sectors, movedRay, movedCamera, screenOffset, screenWidth, context, textureImage);
 }
 
 export function renderColumn(
@@ -56,6 +46,7 @@ export function renderColumn(
   screenOffset: number,
   screenWidth: number,
   context: CanvasRenderingContext2D,
+  textureImage: Image,
 ) {
   const currentSector = sectors[sectorId];
 
@@ -83,7 +74,7 @@ export function renderColumn(
 
     if (hasWallPortal(wall)) {
       const sectorAfterPortal = sectors[wall.portal.sectorId];
-      renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context);
+      renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context, textureImage);
       if (sectorAfterPortal.height < currentSector.height) {
         const portalPerspectiveHeight = heightScale * (sectorAfterPortal.height / HEIGHT_RATIO);
         // render top and bottom parts of wall
@@ -109,7 +100,7 @@ export function renderColumn(
     } else {
       // Render wall
       context.drawImage(
-        i,
+        textureImage,
         64 * rayCross.offset,
         1,
         1,
@@ -120,7 +111,6 @@ export function renderColumn(
         perspectiveHeight * 2,
       );
     }
-
   }
 }
 
@@ -129,6 +119,7 @@ export function renderSector(
   sectorId: number,
   sectors: Sector[],
   camera: Camera,
+  textureImage: Image,
 ) {
   for (let i = 0; i < PERSPECTIVE_WIDTH; i += 1) {
     const biasedFraction = i / PERSPECTIVE_WIDTH - 0.5;
@@ -137,7 +128,7 @@ export function renderSector(
       ...camera,
       angle,
     };
-    renderColumn(sectorId, sectors, ray, camera, i, 1, context);
+    renderColumn(sectorId, sectors, ray, camera, i, 1, context, textureImage);
   }
 }
 
@@ -151,12 +142,7 @@ export function renderFloor(
   context.save();
   context.beginPath();
   context.fillStyle = DEFAULT_FLOOR_COLOR;
-  context.fillRect(
-    screenOffset,
-    PERSPECTIVE_HEIGHT / 2,
-    screenWidth,
-    PERSPECTIVE_HEIGHT / 2,
-  );
+  context.fillRect(screenOffset, PERSPECTIVE_HEIGHT / 2, screenWidth, PERSPECTIVE_HEIGHT / 2);
   context.closePath();
   context.fill();
   context.restore();
