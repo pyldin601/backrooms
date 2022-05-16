@@ -1,9 +1,7 @@
-// @flow
 import type { GameStateInterface } from '../state';
 import { rotatePoint } from '../../util/geometry';
 import { moveTo, lineTo } from '../../util/render';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../../consts';
-import { orderBy } from 'lodash';
 
 const playerPosition = {
   x: CANVAS_WIDTH / 2,
@@ -31,8 +29,8 @@ function renderMap(context: CanvasRenderingContext2D, { map, player }: GameState
   const diffX = x - playerPosition.x;
   const diffY = y - playerPosition.y;
 
-  map.sectors.forEach(sector => {
-    sector.walls.forEach(wall => {
+  map.sectors.forEach((sector) => {
+    sector.walls.forEach((wall) => {
       context.save();
       context.beginPath();
       moveTo(
@@ -54,10 +52,11 @@ function renderPosition(
   context: CanvasRenderingContext2D,
   { player: { position } }: GameStateInterface,
 ) {
-  const playerAngle = 360 / Math.PI * position.angle / 2;
+  const playerAngle = ((360 / Math.PI) * position.angle) / 2;
   const positionText = `(${[position.x, position.y, position.z, playerAngle]
-    .map(n => n.toFixed(0))
+    .map((n) => n.toFixed(0))
     .join(', ')})`;
+
   context.save();
   context.fillStyle = '#ff8800';
   context.fillText(positionText, 2, 10);

@@ -2,13 +2,13 @@
 export type Axis = 'x' | 'y';
 
 export type Point = {
-  x: number,
-  y: number,
+  x: number;
+  y: number;
 };
 
 export type Line = {
-  p1: Point,
-  p2: Point,
+  p1: Point;
+  p2: Point;
 };
 
 export const AXES: Axis[] = ['x', 'y'];
@@ -16,6 +16,7 @@ export const AXES: Axis[] = ['x', 'y'];
 export function getLineAngle(line: Line): number {
   const a = line.p1.x - line.p2.x;
   const b = line.p1.y - line.p2.y;
+
   return Math.atan2(a, b);
 }
 
@@ -65,5 +66,6 @@ export function movePoint(point: Point, amount: number, angle: number, axis?: Ax
 export function getDistanceBetweenPoints(point1: Point, point2: Point): number {
   const dx = point1.x - point2.x;
   const dy = point1.y - point2.y;
+
   return Math.sqrt(dx * dx + dy * dy);
 }

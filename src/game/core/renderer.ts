@@ -1,14 +1,14 @@
-// @flow
-import type { Sector, Camera, Ray, Wall, RayCross } from './types';
+import type { Sector, Camera, Ray, Wall } from './types';
 import {
   PERSPECTIVE_WIDTH,
   PERSPECTIVE_HEIGHT,
   TEXTURE_MAP_SCALE,
-  TEXTURE_TILE_WIDTH, TEXTURE_TILE_HEIGHT,
+  TEXTURE_TILE_WIDTH,
+  TEXTURE_TILE_HEIGHT,
 } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
-import { hasWallPortal, moveCameraInRelationToPortal } from './portal';
+import { isWallWithPortal, moveCameraInRelationToPortal } from './portal';
 import { getDistanceBetweenPoints } from '../../util/geometry';
 
 export const FOCUS_LENGTH = 0.8;
@@ -26,7 +26,7 @@ function renderPortal(
   screenOffset: number,
   screenWidth: number,
   context: CanvasRenderingContext2D,
-  textureImage: Image,
+  textureImage: HTMLImageElement,
 ) {
   const { portal } = wall;
 
@@ -36,7 +36,7 @@ function renderPortal(
 
   const { sectorId, wallId } = portal;
 
-  const thatWall = sectors[sectorId].walls[wallId];
+  const thatWall = sectors[sectorId]!.walls[wallId]!;
 
   const movedCamera = moveCameraInRelationToPortal(wall, thatWall, camera);
   const movedRay = moveCameraInRelationToPortal(wall, thatWall, ray);
@@ -61,9 +61,9 @@ export function renderColumn(
   screenOffset: number,
   screenWidth: number,
   context: CanvasRenderingContext2D,
-  textureImage: Image,
+  textureImage: HTMLImageElement,
 ) {
-  const currentSector = sectors[sectorId];
+  const currentSector = sectors[sectorId]!;
 
   let nearestWall = Infinity;
 
@@ -87,11 +87,14 @@ export function renderColumn(
     renderCeiling(context, camera, screenOffset, screenWidth, perspectiveHeight);
     renderFloor(context, camera, screenOffset, screenWidth, perspectiveHeight);
 
-    if (hasWallPortal(wall)) {
-      const sectorAfterPortal = sectors[wall.portal.sectorId];
+    if (isWallWithPortal(wall)) {
+      const sectorAfterPortal = sectors[wall.portal.sectorId]!;
+
       renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context, textureImage);
+
       if (sectorAfterPortal.height < currentSector.height) {
         const portalPerspectiveHeight = heightScale * (sectorAfterPortal.height / HEIGHT_RATIO);
+
         // render top and bottom parts of wall
         context.save();
         context.beginPath();
@@ -116,7 +119,8 @@ export function renderColumn(
       // Render wall
       const wallLength = getDistanceBetweenPoints(wall.p1, wall.p2);
       const textureOffset = TEXTURE_TILE_WIDTH * wall.texture;
-      const textureColumnOffset = textureOffset + (wallLength * TEXTURE_MAP_SCALE * rayCross.offset) % TEXTURE_TILE_WIDTH;
+      const textureColumnOffset =
+        textureOffset + ((wallLength * TEXTURE_MAP_SCALE * rayCross.offset) % TEXTURE_TILE_WIDTH);
 
       context.drawImage(
         textureImage,
@@ -138,7 +142,7 @@ export function renderSector(
   sectorId: number,
   sectors: Sector[],
   camera: Camera,
-  textureImage: Image,
+  textureImage: HTMLImageElement,
 ) {
   for (let i = 0; i < PERSPECTIVE_WIDTH; i += 1) {
     const biasedFraction = i / PERSPECTIVE_WIDTH - 0.5;
@@ -147,6 +151,7 @@ export function renderSector(
       ...camera,
       angle,
     };
+
     renderColumn(sectorId, sectors, ray, camera, i, 1, context, textureImage);
   }
 }

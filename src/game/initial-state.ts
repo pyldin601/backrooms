@@ -1,5 +1,4 @@
-// @flow
-import type { GameStateInterface } from './state';
+import { GameStateInterface } from './state';
 import { point, portal, sector, wall } from './factory';
 import { getRandomColor } from '../util/colors';
 

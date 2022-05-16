@@ -1,10 +1,8 @@
-// @flow
-import { isPortal, moveCameraInRelationToPortal } from '../core/portal';
+import { isWallWithPortal, moveCameraInRelationToPortal } from '../core/portal';
 import { willClipTheWall } from '../core/collision';
-import { movePoint, AXES } from '../../util/geometry';
-import type { PlayerPosition } from '../state';
-import type { Map, Sector, Wall } from '../core/types';
-import type { Axis } from '../../util/geometry';
+import { movePoint, AXES, Axis } from '../../util/geometry';
+import { PlayerPosition } from '../state';
+import { Map, Sector, Wall } from '../core/types';
 
 export function movePlayerOnMap(
   playerPosition: PlayerPosition,
@@ -15,7 +13,7 @@ export function movePlayerOnMap(
   map: Map,
 ): PlayerPosition {
   const newPlayerPosition = movePlayer(playerPosition, step, angle);
-  const clippedWall = sector.walls.find(wall =>
+  const clippedWall = sector.walls.find((wall) =>
     willClipTheWall(playerPosition, newPlayerPosition, wall),
   );
 
@@ -23,9 +21,9 @@ export function movePlayerOnMap(
     return newPlayerPosition;
   }
 
-  if (isPortal(clippedWall.portal)) {
+  if (isWallWithPortal(clippedWall)) {
     const { sectorId, wallId } = clippedWall.portal;
-    const wallBehindPortal = map.sectors[sectorId].walls[wallId];
+    const wallBehindPortal = map.sectors[sectorId]!.walls[wallId]!;
     const sectorBehindWall = makeSectorBehindPortal(map, sectorId, wallId);
     const playerPositionBehindPortal = movePlayerThroughPortal(
       playerPosition,
@@ -33,6 +31,7 @@ export function movePlayerOnMap(
       wallBehindPortal,
       sectorId,
     );
+
     return movePlayerOnMap(
       playerPositionBehindPortal,
       step,
@@ -46,15 +45,17 @@ export function movePlayerOnMap(
   // Move each axis separately to slip along walls
   return AXES.reduce((playerPosition, axis) => {
     const newPlayerPosition = movePlayer(playerPosition, step, angle, axis);
-    const hasClippings = sector.walls.some(wall =>
+    const hasClippings = sector.walls.some((wall) =>
       willClipTheWall(playerPosition, newPlayerPosition, wall),
     );
+
     return hasClippings ? playerPosition : newPlayerPosition;
   }, playerPosition);
 }
 
 export function makeSectorBehindPortal(map: Map, sectorId: number, wallId: number): Sector {
-  const sector = map.sectors[sectorId];
+  const sector = map.sectors[sectorId]!;
+
   return {
     ...sector,
     walls: sector.walls.filter((_, index) => index !== wallId),

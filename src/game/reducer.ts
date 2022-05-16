@@ -1,5 +1,6 @@
 // @flow
 import { scan } from 'rxjs/operators';
+
 import type { GameStateInterface, PlayerStateInterface } from './state';
 import initialState from './initial-state';
 import { PLAYER_TURN_STEP, PLAYER_SPEED } from '../consts';
@@ -13,7 +14,7 @@ function movePlayerPosition(
   moveSpeed: number,
   moveAngle: number,
 ): PlayerStateInterface {
-  const playerSector = map.sectors[player.position.sectorId];
+  const playerSector = map.sectors[player.position.sectorId]!;
   const position = movePlayerOnMap(
     player.position,
     moveSpeed,
@@ -22,12 +23,14 @@ function movePlayerPosition(
     playerSector,
     map,
   );
+
   return { ...player, position };
 }
 
 function turnPlayer(player: PlayerStateInterface, turnAngle: number): PlayerStateInterface {
   const tpi = 2 * Math.PI;
   const position = { ...player.position, angle: (player.position.angle + turnAngle + tpi) % tpi };
+
   return { ...player, position };
 }
 
@@ -106,6 +109,7 @@ interface ReducerState {
 
 function reduce({ time, state }: ReducerState, keysState: KeysState): ReducerState {
   const now = Date.now();
+
   return { time: now, state: movePlayer(state, keysState, now - time) };
 }
 

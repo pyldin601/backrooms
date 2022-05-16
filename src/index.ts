@@ -1,6 +1,6 @@
-// @flow
-import { defer, interval, Scheduler, Subject } from 'rxjs';
+import { defer, Subject, animationFrameScheduler, interval } from 'rxjs';
 import { combineLatest, withLatestFrom, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+
 import { createKeysStream } from './game/keys';
 import { takeSecond } from './util/projection';
 import { createGameReducer } from './game/reducer';
@@ -12,23 +12,25 @@ import wallsFile from './images/walls.png';
 
 const textureImage$ = defer(() => loadImage(wallsFile));
 
-const generator$ = interval(Scheduler.requestAnimationFrame).pipe(
+const generator$ = interval(0, animationFrameScheduler).pipe(
   withLatestFrom(createKeysStream(), takeSecond()),
 );
 
-const reload$ = new Subject();
+const reload$ = new Subject<void>();
 
 // for HMR reloading support
 if (module.hot) {
-  module.hot.accept(() => reload$.next());
+  module.hot.accept(() => reload$.next(undefined));
 }
 
-const prepareCanvasAndGetContext = (canvasId, width, height) => {
+const prepareCanvasAndGetContext = (canvasId: string, width: number, height: number) => {
   const element = document.getElementById(canvasId);
+
   if (element instanceof HTMLCanvasElement) {
     element.width = width;
     element.height = height;
-    const context = element.getContext('2d');
+    const context = element.getContext('2d')!;
+
     context.imageSmoothingEnabled = false;
     return context;
   } else {
@@ -51,8 +53,11 @@ generator$
   .pipe(
     takeUntil(reload$),
     createGameReducer(),
-    distinctUntilChanged(null, ({ state }) => state),
-    combineLatest(textureImage$)
+    distinctUntilChanged(
+      (a, b) => a === b,
+      ({ state }) => state,
+    ),
+    combineLatest(textureImage$),
   )
   .subscribe(([{ time, state }, textureImage]) => {
     renderTransformed(transformedContext, state);
