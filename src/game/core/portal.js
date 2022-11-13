@@ -1,16 +1,14 @@
-// @flow
-import type { Camera, Point, Portal, Wall } from './types';
 import { getLineAngle, getLineCenter, rotatePoint } from '../../util/geometry';
 
-export function hasWallPortal(wall: Wall): boolean %checks {
+export function hasWallPortal(wall) {
   return isPortal(wall.portal);
 }
 
-export function isPortal(portal: ?Portal): boolean %checks {
+export function isPortal(portal) {
   return portal !== null && portal !== undefined;
 }
 
-export function moveCameraInRelationToPortal(thisWall: Wall, thatWall: Wall, camera: Camera): Camera {
+export function moveCameraInRelationToPortal(thisWall, thatWall, camera) {
   const thisWallAngle = getLineAngle(thisWall);
   const thatWallAngle = getLineAngle(thatWall);
 
@@ -25,13 +23,14 @@ export function moveCameraInRelationToPortal(thisWall: Wall, thatWall: Wall, cam
 }
 
 export function moveAndRotateCamera(
-  camera: Camera,
-  moveX: number,
-  moveY: number,
-  moveAngle: number,
-  center: Point,
-): Camera {
+  camera,
+  moveX,
+  moveY,
+  moveAngle,
+  center,
+) {
   const movedCamera = { ...camera, x: camera.x - moveX, y: camera.y - moveY };
   const newCenter = rotatePoint(movedCamera, center, moveAngle);
+
   return { ...camera, angle: camera.angle + moveAngle, ...newCenter };
 }

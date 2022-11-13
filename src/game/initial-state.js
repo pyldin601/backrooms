@@ -1,11 +1,9 @@
-// @flow
-import type { GameStateInterface } from './state';
 import { point, portal, sector, wall } from './factory';
 import { getRandomColor } from '../util/colors';
 
 export const DEFAULT_HEIGHT = 10;
 
-const initialState: GameStateInterface = {
+const initialState = {
   player: {
     position: {
       x: 10,

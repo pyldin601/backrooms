@@ -1,3 +1,0 @@
-[declarations]
-<PROJECT_ROOT>/declarations/.*
-<PROJECT_ROOT>/flow-typed/.*

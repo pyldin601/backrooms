@@ -1,19 +1,15 @@
-// @flow
 import { isPortal, moveCameraInRelationToPortal } from '../core/portal';
 import { willClipTheWall } from '../core/collision';
 import { movePoint, AXES } from '../../util/geometry';
-import type { PlayerPosition } from '../state';
-import type { Map, Sector, Wall } from '../core/types';
-import type { Axis } from '../../util/geometry';
 
 export function movePlayerOnMap(
-  playerPosition: PlayerPosition,
-  step: number,
-  angle: number,
-  sectorId: number,
-  sector: Sector,
-  map: Map,
-): PlayerPosition {
+  playerPosition,
+  step,
+  angle,
+  sectorId,
+  sector,
+  map,
+) {
   const newPlayerPosition = movePlayer(playerPosition, step, angle);
   const clippedWall = sector.walls.find(wall =>
     willClipTheWall(playerPosition, newPlayerPosition, wall),
@@ -53,8 +49,9 @@ export function movePlayerOnMap(
   }, playerPosition);
 }
 
-export function makeSectorBehindPortal(map: Map, sectorId: number, wallId: number): Sector {
+export function makeSectorBehindPortal(map, sectorId, wallId) {
   const sector = map.sectors[sectorId];
+
   return {
     ...sector,
     walls: sector.walls.filter((_, index) => index !== wallId),
@@ -62,20 +59,20 @@ export function makeSectorBehindPortal(map: Map, sectorId: number, wallId: numbe
 }
 
 export function movePlayer(
-  playerPosition: PlayerPosition,
-  step: number,
-  angle: number,
-  axis?: Axis,
-): PlayerPosition {
+  playerPosition,
+  step,
+  angle,
+  axis,
+) {
   return { ...playerPosition, ...movePoint(playerPosition, step, angle, axis) };
 }
 
 export function movePlayerThroughPortal(
-  playerPosition: PlayerPosition,
-  thisWall: Wall,
-  thatWall: Wall,
-  sectorIdBehindPortal: number,
-): PlayerPosition {
+  playerPosition,
+  thisWall,
+  thatWall,
+  sectorIdBehindPortal,
+) {
   return {
     ...playerPosition,
     ...moveCameraInRelationToPortal(thisWall, thatWall, playerPosition),

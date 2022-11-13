@@ -1,4 +1,3 @@
-// @flow
 import { defer, interval, Scheduler, Subject } from 'rxjs';
 import { combineLatest, withLatestFrom, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { createKeysStream } from './game/keys';

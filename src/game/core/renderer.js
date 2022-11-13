@@ -1,5 +1,3 @@
-// @flow
-import type { Sector, Camera, Ray, Wall, RayCross } from './types';
 import {
   PERSPECTIVE_WIDTH,
   PERSPECTIVE_HEIGHT,
@@ -19,14 +17,14 @@ export const DEFAULT_CEILING_COLOR = '#009aff';
 export const DEFAULT_FLOOR_COLOR = '#2a2a2a';
 
 function renderPortal(
-  wall: Wall,
-  sectors: Sector[],
-  ray: Camera,
-  camera: Camera,
-  screenOffset: number,
-  screenWidth: number,
-  context: CanvasRenderingContext2D,
-  textureImage: Image,
+  wall,
+  sectors,
+  ray,
+  camera,
+  screenOffset,
+  screenWidth,
+  context,
+  textureImage,
 ) {
   const { portal } = wall;
 
@@ -54,14 +52,14 @@ function renderPortal(
 }
 
 export function renderColumn(
-  sectorId: number,
-  sectors: Sector[],
-  ray: Ray,
-  camera: Camera,
-  screenOffset: number,
-  screenWidth: number,
-  context: CanvasRenderingContext2D,
-  textureImage: Image,
+  sectorId,
+  sectors,
+  ray,
+  camera,
+  screenOffset,
+  screenWidth,
+  context,
+  textureImage,
 ) {
   const currentSector = sectors[sectorId];
 
@@ -134,11 +132,11 @@ export function renderColumn(
 }
 
 export function renderSector(
-  context: CanvasRenderingContext2D,
-  sectorId: number,
-  sectors: Sector[],
-  camera: Camera,
-  textureImage: Image,
+  context,
+  sectorId,
+  sectors,
+  camera,
+  textureImage,
 ) {
   for (let i = 0; i < PERSPECTIVE_WIDTH; i += 1) {
     const biasedFraction = i / PERSPECTIVE_WIDTH - 0.5;
@@ -152,11 +150,11 @@ export function renderSector(
 }
 
 export function renderFloor(
-  context: CanvasRenderingContext2D,
-  camera: Camera,
-  screenOffset: number,
-  screenWidth: number,
-  perspectiveHeight: number,
+  context,
+  camera,
+  screenOffset,
+  screenWidth,
+  perspectiveHeight,
 ) {
   context.save();
   context.beginPath();
@@ -168,11 +166,11 @@ export function renderFloor(
 }
 
 export function renderCeiling(
-  context: CanvasRenderingContext2D,
-  camera: Camera,
-  screenOffset: number,
-  screenWidth: number,
-  perspectiveHeight: number,
+  context,
+  camera,
+  screenOffset,
+  screenWidth,
+  perspectiveHeight,
 ) {
   context.save();
   context.beginPath();

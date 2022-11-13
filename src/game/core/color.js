@@ -1,7 +1,6 @@
-// @flow
 const COLOR_PREG = /#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/;
 
-export function darken(color: string, amount: number): string {
+export function darken(color, amount) {
   const match = COLOR_PREG.exec(color);
 
   if (match === null) {
