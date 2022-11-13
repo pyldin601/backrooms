@@ -1,5 +1,2 @@
-// @flow
-import type { Point } from './geometry';
-
-export const moveTo = (context: CanvasRenderingContext2D, { x, y }: Point) => context.moveTo(x, y);
-export const lineTo = (context: CanvasRenderingContext2D, { x, y }: Point) => context.lineTo(x, y);
+export const moveTo = (context, { x, y }) => context.moveTo(x, y);
+export const lineTo = (context, { x, y }) => context.lineTo(x, y);

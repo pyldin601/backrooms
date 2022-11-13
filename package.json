@@ -1,32 +1,27 @@
 {
-  "name": "game",
-  "version": "1.0.0",
+  "name": "backrooms",
+  "version": "0.0.0",
   "description": "",
-  "homepage": "https://pldin601.github.io/game",
+  "homepage": "https://pldin601.github.io/backrooms",
   "scripts": {
     "clean": "rimraf dist/* .cache/*",
     "prestart": "npm run clean",
     "start": "parcel public/index.html",
     "prebuild": "rimraf dist/*",
     "build": "parcel build public/index.html --public-url ./",
-    "deploy": "gh-pages -d dist",
-    "flow-typed": "flow-typed",
-    "postinstall": "npm run flow-typed install"
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "flow-bin": "^0.75.0",
     "lodash": "^4.17.15",
     "rxjs": "^6.5.4"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
-    "flow-typed": "^2.6.2",
     "gh-pages": "^1.2.0",
     "parcel-bundler": "^1.12.4",
     "prettier": "^1.19.1",

@@ -1,10 +1,8 @@
-//@flow
 import { getRandomColor } from './colors';
-import type { Sector, Wall } from '../game/core/types';
 
 const BLOCK_SIZE = 10;
 
-export function createInnerBlock(x: number, y: number, width: number, height: number): Wall[] {
+export function createInnerBlock(x, y, width, height) {
   return [
     { p2: { x, y }, p1: { x: x + width, y }, color: getRandomColor(), portal: undefined },
     {
@@ -23,7 +21,7 @@ export function createInnerBlock(x: number, y: number, width: number, height: nu
   ];
 }
 
-export function createOuterBlock(x: number, y: number, width: number, height: number): Wall[] {
+export function createOuterBlock(x, y, width, height) {
   return [
     { p1: { x, y }, p2: { x: x + width, y }, color: getRandomColor(), portal: undefined },
     {
@@ -42,7 +40,7 @@ export function createOuterBlock(x: number, y: number, width: number, height: nu
   ];
 }
 
-export function flatMapToSector(width: number, height: number, map: any[][]): Sector {
+export function flatMapToSector(width, height, map) {
   const sector = {
     walls: [...createOuterBlock(0, 0, width, height)],
     height: BLOCK_SIZE,

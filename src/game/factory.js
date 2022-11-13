@@ -1,8 +1,6 @@
-// @flow
-import type { Wall, Sector, Portal, Point } from './core/types';
 import { getRandomColor } from '../util/colors';
 
-export function sector(height: number, walls: Wall[]): Sector {
+export function sector(height, walls) {
   return {
     height,
     walls,
@@ -10,19 +8,19 @@ export function sector(height: number, walls: Wall[]): Sector {
 }
 
 export function wall(
-  p1: Point,
-  p2: Point,
-  color: string = getRandomColor(),
-  portal: ?Portal = null,
-  texture: ?number = 0,
-): Wall {
+  p1,
+  p2,
+  color = getRandomColor(),
+  portal = null,
+  texture = 0,
+) {
   return { p1, p2, color, portal, texture };
 }
 
-export function point(x: number, y: number): Point {
+export function point(x, y) {
   return { x, y };
 }
 
-export function portal(sectorId: number, wallId: number): Portal {
+export function portal(sectorId, wallId) {
   return { sectorId, wallId };
 }

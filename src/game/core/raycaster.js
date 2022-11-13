@@ -1,13 +1,11 @@
-// @flow
-import type { Camera, Point, Ray, RayCross, Wall } from './types';
 import { scale, unscale } from './numbers';
 import { rotatePoint } from '../../util/geometry';
 
-export function isWallInFrontIfCamera(wall: Wall, camera: Camera): boolean {
+export function isWallInFrontIfCamera(wall, camera) {
   return wall.p1.y <= camera.y && camera.y <= wall.p2.y;
 }
 
-export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
+export function crossTheWall(ray, wall) {
   if (!isRayCentered(ray)) {
     return crossTheWall(centerRay(ray), rotateWall(wall, ray, -ray.angle));
   }
@@ -26,15 +24,15 @@ export function crossTheWall(ray: Ray, wall: Wall): RayCross | null {
   return { distance, offset };
 }
 
-export function centerRay(ray: Ray): Ray {
+export function centerRay(ray) {
   return { ...ray, angle: 0 };
 }
 
-export function isRayCentered(ray: Ray): boolean {
+export function isRayCentered(ray) {
   return ray.angle === 0;
 }
 
-export function rotateWall({ p1, p2, color, portal }: Wall, center: Point, angle: number): Wall {
+export function rotateWall({ p1, p2, color, portal }, center, angle) {
   return {
     p1: rotatePoint(p1, center, angle),
     p2: rotatePoint(p2, center, angle),

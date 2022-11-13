@@ -1,19 +1,8 @@
-// @flow
 import { Observable, fromEvent, merge } from 'rxjs';
 import { distinctUntilChanged, groupBy, map, mergeAll, scan, tap, filter, startWith } from 'rxjs/operators';
 
 
-export type KeysState = {|
-  ArrowLeft: boolean,
-  ArrowRight: boolean,
-  ArrowUp: boolean,
-  ArrowDown: boolean,
-  Alt: boolean,
-  Shift: boolean,
-|};
-
-
-const initialKeysState: KeysState = {
+const initialKeysState = {
   ArrowLeft: false,
   ArrowRight: false,
   ArrowUp: false,
@@ -24,7 +13,7 @@ const initialKeysState: KeysState = {
 
 const allowedKeys = new Set(Object.keys(initialKeysState));
 
-export function createKeysStream(): Observable<KeysState> {
+export function createKeysStream() {
   const downs$ = fromEvent(document, 'keydown');
   const ups$ = fromEvent(document, 'keyup');
 

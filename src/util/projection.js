@@ -1,4 +1,3 @@
-// @flow
-export function takeSecond<T>() {
-  return (a: *, b: T) => b;
+export function takeSecond() {
+  return (a, b) => b;
 }

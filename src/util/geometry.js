@@ -1,32 +1,19 @@
-// @flow
-export type Axis = 'x' | 'y';
+export const AXES = ['x', 'y'];
 
-export type Point = {
-  x: number,
-  y: number,
-};
-
-export type Line = {
-  p1: Point,
-  p2: Point,
-};
-
-export const AXES: Axis[] = ['x', 'y'];
-
-export function getLineAngle(line: Line): number {
+export function getLineAngle(line) {
   const a = line.p1.x - line.p2.x;
   const b = line.p1.y - line.p2.y;
   return Math.atan2(a, b);
 }
 
-export function getLineCenter(line: Line): Point {
+export function getLineCenter(line) {
   return {
     x: (line.p1.x + line.p2.x) / 2,
     y: (line.p1.y + line.p2.y) / 2,
   };
 }
 
-export function rotatePoint(point: Point, center: Point, angle: number): Point {
+export function rotatePoint(point, center, angle) {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
 
@@ -46,7 +33,7 @@ export function rotatePoint(point: Point, center: Point, angle: number): Point {
   };
 }
 
-export function movePoint(point: Point, amount: number, angle: number, axis?: Axis): Point {
+export function movePoint(point, amount, angle, axis) {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
 
@@ -62,8 +49,9 @@ export function movePoint(point: Point, amount: number, angle: number, axis?: Ax
   return { ...point, [axis]: newPoint[axis] };
 }
 
-export function getDistanceBetweenPoints(point1: Point, point2: Point): number {
+export function getDistanceBetweenPoints(point1, point2) {
   const dx = point1.x - point2.x;
   const dy = point1.y - point2.y;
+
   return Math.sqrt(dx * dx + dy * dy);
 }
