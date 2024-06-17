@@ -45,12 +45,14 @@ const transformedContext = prepareCanvasAndGetContext(
   'canvas-transformed',
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
-)!;
+);
+assert(transformedContext);
 const perspectiveContext = prepareCanvasAndGetContext(
   'canvas-perspective',
   PERSPECTIVE_WIDTH,
   PERSPECTIVE_HEIGHT,
-)!;
+);
+assert(perspectiveContext);
 
 generator$
   .pipe(takeUntil(reload$), createGameReducer(), combineLatest(textureImage$))
