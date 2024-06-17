@@ -33,3 +33,7 @@ export interface ISector {
   height: number;
   walls: IWall[];
 }
+
+export interface IMap {
+  sectors: ISector[];
+}
