@@ -1,16 +1,16 @@
 import { isPortal, moveCameraInRelationToPortal } from '../core/portal';
 import { willClipTheWall } from '../core/collision';
 import { movePoint, AXES } from '../../util/geometry';
-import { ICamera, IMap, ISector, IWall } from '@/game/map-types';
+import { ICamera, IMap, IPlayerPosition, ISector, IWall } from '@/game/map-types';
 
 export function movePlayerOnMap(
-  playerPosition: ICamera,
+  playerPosition: IPlayerPosition,
   step: number,
   angle: number,
   sectorId: number,
   sector: ISector,
   map: IMap,
-) {
+): IPlayerPosition {
   const newPlayerPosition = movePlayer(playerPosition, step, angle, null);
   const clippedWall = sector.walls.find((wall) =>
     willClipTheWall(playerPosition, newPlayerPosition, wall),
@@ -60,11 +60,11 @@ export function makeSectorBehindPortal(map: IMap, sectorId: number, wallId: numb
 }
 
 export function movePlayer(
-  playerPosition: ICamera,
+  playerPosition: IPlayerPosition,
   step: number,
   angle: number,
   axis: 'x' | 'y' | null,
-) {
+): IPlayerPosition {
   return { ...playerPosition, ...movePoint(playerPosition, step, angle, axis) };
 }
 

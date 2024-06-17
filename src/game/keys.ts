@@ -10,7 +10,16 @@ import {
   startWith,
 } from 'rxjs/operators';
 
-const initialKeysState = {
+export interface IKeysState {
+  ArrowLeft: boolean;
+  ArrowRight: boolean;
+  ArrowUp: boolean;
+  ArrowDown: boolean;
+  Alt: boolean;
+  Shift: boolean;
+}
+
+const initialKeysState: IKeysState = {
   ArrowLeft: false,
   ArrowRight: false,
   ArrowUp: false,

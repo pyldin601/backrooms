@@ -20,6 +20,7 @@ export interface IPortal {
 export interface ICamera {
   x: number;
   y: number;
+  z: number;
   angle: number;
 }
 
@@ -34,14 +35,16 @@ export interface ISector {
   walls: readonly IWall[];
 }
 
+export interface IPlayerPosition {
+  x: number;
+  y: number;
+  z: number;
+  angle: number;
+  sectorId: number;
+}
+
 export interface IPlayer {
-  position: {
-    x: number;
-    y: number;
-    z: number;
-    angle: number;
-    sectorId: number;
-  };
+  position: IPlayerPosition;
 }
 
 export interface IMap {

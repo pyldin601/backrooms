@@ -2,13 +2,20 @@ import { scan } from 'rxjs/operators';
 import initialState from './initial-state';
 import { PLAYER_TURN_STEP, PLAYER_SPEED } from '../consts';
 import { movePlayerOnMap } from './interact/move';
+import { IGameState, IMap, IPlayer } from '@/game/map-types';
+import { IKeysState } from '@/game/keys';
+
+export interface IReducerState {
+  time: number;
+  state: IGameState;
+}
 
 function movePlayerPosition(
-  player,
-  map,
-  moveSpeed,
-  moveAngle,
-) {
+  player: IPlayer,
+  map: IMap,
+  moveSpeed: number,
+  moveAngle: number,
+): IPlayer {
   const playerSector = map.sectors[player.position.sectorId];
   const position = movePlayerOnMap(
     player.position,
@@ -22,18 +29,14 @@ function movePlayerPosition(
   return { ...player, position };
 }
 
-function turnPlayer(player, turnAngle) {
+function turnPlayer(player: IPlayer, turnAngle: number) {
   const tpi = 2 * Math.PI;
   const position = { ...player.position, angle: (player.position.angle + turnAngle + tpi) % tpi };
 
   return { ...player, position };
 }
 
-function movePlayer(
-  gameState,
-  keysState,
-  deltaMs,
-) {
+function movePlayer(gameState: IGameState, keysState: IKeysState, deltaMs: number) {
   let walkSpeed = (PLAYER_SPEED / 16) * deltaMs;
   let turnSpeed = (PLAYER_TURN_STEP / 16) * deltaMs;
 
@@ -97,7 +100,7 @@ function movePlayer(
   return playerState === player ? gameState : { ...gameState, player: playerState };
 }
 
-function reduce({ time, state }, keysState) {
+function reduce({ time, state }, keysState: IKeysState) {
   const now = Date.now();
 
   return { time: now, state: movePlayer(state, keysState, now - time) };
