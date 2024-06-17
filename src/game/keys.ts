@@ -1,4 +1,4 @@
-import { Observable, fromEvent, merge, distinct } from 'rxjs';
+import { fromEvent, merge } from 'rxjs';
 import {
   distinctUntilChanged,
   groupBy,
@@ -38,7 +38,7 @@ export function createKeysStream() {
     filter((event) => allowedKeys.has(event.key)),
     tap((event) => event.preventDefault()),
     groupBy((event) => event.key),
-    map((group) => group.pipe(distinct((event) => event.type))),
+    map((group) => group.pipe(distinctUntilChanged((a, b) => a.key !== b.key))),
     mergeAll(),
     scan((acc, event) => ({ ...acc, [event.key]: event.type === 'keydown' }), initialKeysState),
     startWith(initialKeysState),

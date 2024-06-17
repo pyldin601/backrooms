@@ -1,3 +1,3 @@
-export function takeSecond<A, B>() {
-  return (a: A, b: B): B => b;
+export function takeSecond() {
+  return <A, B>(a: A, b: B): B => b;
 }
