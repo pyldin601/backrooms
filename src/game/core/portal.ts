@@ -1,13 +1,13 @@
 import { getLineAngle, getLineCenter, rotatePoint } from '@/util/geometry';
-import { ICamera, IPortal, IWall } from '@/game/map-types';
+import { ICamera, IPortal, IWall, IWallWithPortal } from '@/game/map-types';
 import { IPoint } from '@/game/geometry-types';
 
-export function hasWallPortal(wall: IWall) {
+export function hasWallPortal(wall: IWall | IWallWithPortal): wall is IWallWithPortal {
   return isPortal(wall.portal);
 }
 
-export function isPortal(portal: IPortal | null | undefined): portal is IPortal {
-  return portal !== null && portal !== undefined;
+export function isPortal(portal: IPortal | null): portal is IPortal {
+  return portal !== null;
 }
 
 export function moveCameraInRelationToPortal(thisWall: IWall, thatWall: IWall, camera: ICamera) {
