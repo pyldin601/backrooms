@@ -4,11 +4,11 @@ import {
   TEXTURE_MAP_SCALE,
   TEXTURE_TILE_WIDTH,
   TEXTURE_TILE_HEIGHT,
-} from '@/consts';
+} from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
 import { hasWallPortal, moveCameraInRelationToPortal } from './portal';
-import { getDistanceBetweenPoints } from '@/util/geometry';
+import { getDistanceBetweenPoints } from '../../util/geometry';
 import { ICamera, IRay, ISector, IWall } from '@/game/map-types';
 
 export const FOCUS_LENGTH = 0.8;
