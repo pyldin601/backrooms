@@ -1,14 +1,16 @@
 import { getLineAngle, getLineCenter, rotatePoint } from '../../util/geometry';
+import { ICamera, IPortal, IRay, IWall, IWallWithPortal } from '@/game/map-types';
+import { IPoint } from '@/game/geometry-types';
 
-export function hasWallPortal(wall) {
+export function hasWallPortal(wall: IWall | IWallWithPortal): wall is IWallWithPortal {
   return isPortal(wall.portal);
 }
 
-export function isPortal(portal) {
-  return portal !== null && portal !== undefined;
+export function isPortal(portal: IPortal | null): portal is IPortal {
+  return portal !== null;
 }
 
-export function moveCameraInRelationToPortal(thisWall, thatWall, camera) {
+export function moveCameraInRelationToPortal(thisWall: IWall, thatWall: IWall, camera: ICamera) {
   const thisWallAngle = getLineAngle(thisWall);
   const thatWallAngle = getLineAngle(thatWall);
 
@@ -23,11 +25,11 @@ export function moveCameraInRelationToPortal(thisWall, thatWall, camera) {
 }
 
 export function moveAndRotateCamera(
-  camera,
-  moveX,
-  moveY,
-  moveAngle,
-  center,
+  camera: ICamera | IRay,
+  moveX: number,
+  moveY: number,
+  moveAngle: number,
+  center: IPoint,
 ) {
   const movedCamera = { ...camera, x: camera.x - moveX, y: camera.y - moveY };
   const newCenter = rotatePoint(movedCamera, center, moveAngle);

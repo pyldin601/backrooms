@@ -2,12 +2,14 @@ import {
   PERSPECTIVE_WIDTH,
   PERSPECTIVE_HEIGHT,
   TEXTURE_MAP_SCALE,
-  TEXTURE_TILE_WIDTH, TEXTURE_TILE_HEIGHT,
+  TEXTURE_TILE_WIDTH,
+  TEXTURE_TILE_HEIGHT,
 } from '../../consts';
 import { crossTheWall } from './raycaster';
 import { darken } from './color';
 import { hasWallPortal, moveCameraInRelationToPortal } from './portal';
 import { getDistanceBetweenPoints } from '../../util/geometry';
+import { ICamera, IRay, ISector, IWall } from '@/game/map-types';
 
 export const FOCUS_LENGTH = 0.8;
 export const HEIGHT_RATIO = 1.3;
@@ -17,14 +19,14 @@ export const DEFAULT_CEILING_COLOR = '#009aff';
 export const DEFAULT_FLOOR_COLOR = '#2a2a2a';
 
 function renderPortal(
-  wall,
-  sectors,
-  ray,
-  camera,
-  screenOffset,
-  screenWidth,
-  context,
-  textureImage,
+  wall: IWall,
+  sectors: readonly ISector[],
+  ray: IRay,
+  camera: ICamera,
+  screenOffset: number,
+  screenWidth: number,
+  context: CanvasRenderingContext2D,
+  textureImage: CanvasImageSource,
 ) {
   const { portal } = wall;
 
@@ -52,14 +54,14 @@ function renderPortal(
 }
 
 export function renderColumn(
-  sectorId,
-  sectors,
-  ray,
-  camera,
-  screenOffset,
-  screenWidth,
-  context,
-  textureImage,
+  sectorId: number,
+  sectors: readonly ISector[],
+  ray: IRay,
+  camera: ICamera,
+  screenOffset: number,
+  screenWidth: number,
+  context: CanvasRenderingContext2D,
+  textureImage: CanvasImageSource,
 ) {
   const currentSector = sectors[sectorId];
 
@@ -114,7 +116,8 @@ export function renderColumn(
       // Render wall
       const wallLength = getDistanceBetweenPoints(wall.p1, wall.p2);
       const textureOffset = TEXTURE_TILE_WIDTH * wall.texture;
-      const textureColumnOffset = textureOffset + (wallLength * TEXTURE_MAP_SCALE * rayCross.offset) % TEXTURE_TILE_WIDTH;
+      const textureColumnOffset =
+        textureOffset + ((wallLength * TEXTURE_MAP_SCALE * rayCross.offset) % TEXTURE_TILE_WIDTH);
 
       context.drawImage(
         textureImage,
@@ -132,11 +135,11 @@ export function renderColumn(
 }
 
 export function renderSector(
-  context,
-  sectorId,
-  sectors,
-  camera,
-  textureImage,
+  context: CanvasRenderingContext2D,
+  sectorId: number,
+  sectors: readonly ISector[],
+  camera: ICamera,
+  textureImage: CanvasImageSource,
 ) {
   for (let i = 0; i < PERSPECTIVE_WIDTH; i += 1) {
     const biasedFraction = i / PERSPECTIVE_WIDTH - 0.5;
@@ -150,11 +153,11 @@ export function renderSector(
 }
 
 export function renderFloor(
-  context,
-  camera,
-  screenOffset,
-  screenWidth,
-  perspectiveHeight,
+  context: CanvasRenderingContext2D,
+  camera: ICamera,
+  screenOffset: number,
+  screenWidth: number,
+  perspectiveHeight: number,
 ) {
   context.save();
   context.beginPath();
@@ -166,11 +169,11 @@ export function renderFloor(
 }
 
 export function renderCeiling(
-  context,
-  camera,
-  screenOffset,
-  screenWidth,
-  perspectiveHeight,
+  context: CanvasRenderingContext2D,
+  camera: ICamera,
+  screenOffset: number,
+  screenWidth: number,
+  perspectiveHeight: number,
 ) {
   context.save();
   context.beginPath();

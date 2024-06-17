@@ -1,11 +1,13 @@
 import { scale, unscale } from './numbers';
 import { rotatePoint } from '../../util/geometry';
+import { ICamera, IRay, IWall } from '@/game/map-types';
+import { IPoint } from '@/game/geometry-types';
 
-export function isWallInFrontIfCamera(wall, camera) {
+export function isWallInFrontIfCamera(wall: IWall, camera: ICamera | IRay) {
   return wall.p1.y <= camera.y && camera.y <= wall.p2.y;
 }
 
-export function crossTheWall(ray, wall) {
+export function crossTheWall(ray: IRay, wall: IWall) {
   if (!isRayCentered(ray)) {
     return crossTheWall(centerRay(ray), rotateWall(wall, ray, -ray.angle));
   }
@@ -24,19 +26,18 @@ export function crossTheWall(ray, wall) {
   return { distance, offset };
 }
 
-export function centerRay(ray) {
+export function centerRay(ray: IRay) {
   return { ...ray, angle: 0 };
 }
 
-export function isRayCentered(ray) {
+export function isRayCentered(ray: IRay) {
   return ray.angle === 0;
 }
 
-export function rotateWall({ p1, p2, color, portal }, center, angle) {
+export function rotateWall({ p1, p2, ...other }: IWall, center: IPoint, angle: number) {
   return {
+    ...other,
     p1: rotatePoint(p1, center, angle),
     p2: rotatePoint(p2, center, angle),
-    color,
-    portal,
   };
 }
