@@ -34,6 +34,22 @@ export interface ISector {
   walls: IWall[];
 }
 
+export interface IPlayer {
+  position: {
+    x: number;
+    y: number;
+    z: number;
+    angle: number;
+    sectorId: number;
+  };
+}
+
 export interface IMap {
   sectors: ISector[];
+  player: IPlayer;
+}
+
+export interface IGameState {
+  player: IPlayer;
+  map: IMap;
 }
