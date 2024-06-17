@@ -12,3 +12,9 @@ export interface IPortal {
   sectorId: number;
   wallId: number;
 }
+
+export interface ICamera {
+  x: number;
+  y: number;
+  angle: number;
+}
