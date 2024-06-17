@@ -1,17 +1,18 @@
 import { isPortal, moveCameraInRelationToPortal } from '../core/portal';
 import { willClipTheWall } from '../core/collision';
 import { movePoint, AXES } from '../../util/geometry';
+import { ICamera, IMap, ISector, IWall } from '@/game/map-types';
 
 export function movePlayerOnMap(
-  playerPosition,
-  step,
-  angle,
-  sectorId,
-  sector,
-  map,
+  playerPosition: ICamera,
+  step: number,
+  angle: number,
+  sectorId: number,
+  sector: ISector,
+  map: IMap,
 ) {
-  const newPlayerPosition = movePlayer(playerPosition, step, angle);
-  const clippedWall = sector.walls.find(wall =>
+  const newPlayerPosition = movePlayer(playerPosition, step, angle, null);
+  const clippedWall = sector.walls.find((wall) =>
     willClipTheWall(playerPosition, newPlayerPosition, wall),
   );
 
@@ -42,14 +43,14 @@ export function movePlayerOnMap(
   // Move each axis separately to slip along walls
   return AXES.reduce((playerPosition, axis) => {
     const newPlayerPosition = movePlayer(playerPosition, step, angle, axis);
-    const hasClippings = sector.walls.some(wall =>
+    const hasClippings = sector.walls.some((wall) =>
       willClipTheWall(playerPosition, newPlayerPosition, wall),
     );
     return hasClippings ? playerPosition : newPlayerPosition;
   }, playerPosition);
 }
 
-export function makeSectorBehindPortal(map, sectorId, wallId) {
+export function makeSectorBehindPortal(map: IMap, sectorId: number, wallId: number) {
   const sector = map.sectors[sectorId];
 
   return {
@@ -59,19 +60,19 @@ export function makeSectorBehindPortal(map, sectorId, wallId) {
 }
 
 export function movePlayer(
-  playerPosition,
-  step,
-  angle,
-  axis,
+  playerPosition: ICamera,
+  step: number,
+  angle: number,
+  axis: 'x' | 'y' | null,
 ) {
   return { ...playerPosition, ...movePoint(playerPosition, step, angle, axis) };
 }
 
 export function movePlayerThroughPortal(
-  playerPosition,
-  thisWall,
-  thatWall,
-  sectorIdBehindPortal,
+  playerPosition: ICamera,
+  thisWall: IWall,
+  thatWall: IWall,
+  sectorIdBehindPortal: number,
 ) {
   return {
     ...playerPosition,

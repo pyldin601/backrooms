@@ -1,6 +1,6 @@
 import { ILine, IPoint } from '@/game/geometry-types';
 
-export const AXES = ['x', 'y'];
+export const AXES: ('x' | 'y')[] = ['x', 'y'];
 
 export function getLineAngle(line: ILine) {
   const a = line.p1.x - line.p2.x;
@@ -35,7 +35,7 @@ export function rotatePoint(point: IPoint, center: IPoint, angle: number) {
   };
 }
 
-export function movePoint(point: IPoint, amount: number, angle: number, axis: 'x' | 'y') {
+export function movePoint(point: IPoint, amount: number, angle: number, axis: 'x' | 'y' | null) {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
 
@@ -44,7 +44,7 @@ export function movePoint(point: IPoint, amount: number, angle: number, axis: 'x
     y: point.y + amount * s,
   };
 
-  if (axis === null || axis === undefined) {
+  if (axis === null) {
     return newPoint;
   }
 
