@@ -1,9 +1,10 @@
 import { point, portal, sector, wall } from './factory';
 import { getRandomColor } from '../util/colors';
+import { IGameState } from '@/game/map-types';
 
 export const DEFAULT_HEIGHT = 10;
 
-const initialState = {
+const initialState: IGameState = {
   player: {
     position: {
       x: 10,

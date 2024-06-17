@@ -19,7 +19,7 @@ export function wall(
   return { p1, p2, color, portal, texture };
 }
 
-export function point(x: IPoint, y: IPoint) {
+export function point(x: number, y: number) {
   return { x, y };
 }
 

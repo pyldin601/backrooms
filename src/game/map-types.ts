@@ -31,7 +31,7 @@ export interface IRay {
 
 export interface ISector {
   height: number;
-  walls: IWall[];
+  walls: readonly IWall[];
 }
 
 export interface IPlayer {
@@ -45,8 +45,7 @@ export interface IPlayer {
 }
 
 export interface IMap {
-  sectors: ISector[];
-  player: IPlayer;
+  sectors: readonly ISector[];
 }
 
 export interface IGameState {
