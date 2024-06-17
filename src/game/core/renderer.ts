@@ -20,7 +20,7 @@ export const DEFAULT_FLOOR_COLOR = '#2a2a2a';
 
 function renderPortal(
   wall: IWall,
-  sectors: ISector[],
+  sectors: readonly ISector[],
   ray: IRay,
   camera: ICamera,
   screenOffset: number,
@@ -55,7 +55,7 @@ function renderPortal(
 
 export function renderColumn(
   sectorId: number,
-  sectors: ISector[],
+  sectors: readonly ISector[],
   ray: IRay,
   camera: ICamera,
   screenOffset: number,
@@ -137,7 +137,7 @@ export function renderColumn(
 export function renderSector(
   context: CanvasRenderingContext2D,
   sectorId: number,
-  sectors: ISector[],
+  sectors: readonly ISector[],
   camera: ICamera,
   textureImage: CanvasImageSource,
 ) {

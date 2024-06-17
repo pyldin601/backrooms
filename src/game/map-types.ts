@@ -20,7 +20,6 @@ export interface IPortal {
 export interface ICamera {
   x: number;
   y: number;
-  z: number;
   angle: number;
 }
 

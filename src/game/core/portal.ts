@@ -1,5 +1,5 @@
 import { getLineAngle, getLineCenter, rotatePoint } from '../../util/geometry';
-import { ICamera, IPortal, IWall, IWallWithPortal } from '@/game/map-types';
+import { ICamera, IPortal, IRay, IWall, IWallWithPortal } from '@/game/map-types';
 import { IPoint } from '@/game/geometry-types';
 
 export function hasWallPortal(wall: IWall | IWallWithPortal): wall is IWallWithPortal {
@@ -25,7 +25,7 @@ export function moveCameraInRelationToPortal(thisWall: IWall, thatWall: IWall, c
 }
 
 export function moveAndRotateCamera(
-  camera: ICamera,
+  camera: ICamera | IRay,
   moveX: number,
   moveY: number,
   moveAngle: number,
