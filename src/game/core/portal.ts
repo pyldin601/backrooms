@@ -1,4 +1,4 @@
-import { getLineAngle, getLineCenter, rotatePoint } from '@/util/geometry';
+import { getLineAngle, getLineCenter, rotatePoint } from '../../util/geometry';
 import { ICamera, IPortal, IWall, IWallWithPortal } from '@/game/map-types';
 import { IPoint } from '@/game/geometry-types';
 
