@@ -1,9 +1,9 @@
 import { scale, unscale } from './numbers';
-import { rotatePoint } from '@/util/geometry';
+import { rotatePoint } from '../../util/geometry';
 import { ICamera, IRay, IWall } from '@/game/map-types';
 import { IPoint } from '@/game/geometry-types';
 
-export function isWallInFrontIfCamera(wall: IWall, camera: ICamera) {
+export function isWallInFrontIfCamera(wall: IWall, camera: ICamera | IRay) {
   return wall.p1.y <= camera.y && camera.y <= wall.p2.y;
 }
 
