@@ -18,3 +18,9 @@ export interface ICamera {
   y: number;
   angle: number;
 }
+
+export interface IRay {
+  x: number;
+  y: number;
+  angle: number;
+}
