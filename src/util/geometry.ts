@@ -1,19 +1,21 @@
+import { ILine, IPoint } from '@/game/geometry-types';
+
 export const AXES = ['x', 'y'];
 
-export function getLineAngle(line) {
+export function getLineAngle(line: ILine) {
   const a = line.p1.x - line.p2.x;
   const b = line.p1.y - line.p2.y;
   return Math.atan2(a, b);
 }
 
-export function getLineCenter(line) {
+export function getLineCenter(line: ILine) {
   return {
     x: (line.p1.x + line.p2.x) / 2,
     y: (line.p1.y + line.p2.y) / 2,
   };
 }
 
-export function rotatePoint(point, center, angle) {
+export function rotatePoint(point: IPoint, center: IPoint, angle: number) {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
 
@@ -33,7 +35,7 @@ export function rotatePoint(point, center, angle) {
   };
 }
 
-export function movePoint(point, amount, angle, axis) {
+export function movePoint(point: IPoint, amount: number, angle: number, axis: 'x' | 'y') {
   const c = Math.cos(angle);
   const s = Math.sin(angle);
 
@@ -49,7 +51,7 @@ export function movePoint(point, amount, angle, axis) {
   return { ...point, [axis]: newPoint[axis] };
 }
 
-export function getDistanceBetweenPoints(point1, point2) {
+export function getDistanceBetweenPoints(point1: IPoint, point2: IPoint) {
   const dx = point1.x - point2.x;
   const dy = point1.y - point2.y;
 
