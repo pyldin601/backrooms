@@ -4,6 +4,11 @@ html, body {
     margin: 0;
 }
 
+.canvas_wrap {
+    display: flex;
+    justify-content: center;
+}
+
 .canvas-list_wrap {
     width: 100vw;
     height: 100vh;
@@ -11,10 +16,10 @@ html, body {
 
 
 .perspective_view {
-    width: 100vw;
     height: 100vh;
     box-sizing: border-box;
     image-rendering: pixelated;
+    aspect-ratio: 16 / 9;
 }
 
 .map_view {
@@ -23,6 +28,8 @@ html, body {
     margin: 8px;
     width: 200px;
     height: 200px;
+    left: 0;
+    top: 0;
     box-sizing: border-box;
     image-rendering: pixelated;
 
