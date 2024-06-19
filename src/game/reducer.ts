@@ -100,7 +100,7 @@ function movePlayer(gameState: IGameState, keysState: IKeysState, deltaMs: numbe
   return playerState === player ? gameState : { ...gameState, player: playerState };
 }
 
-function reduce({ time, state }, keysState: IKeysState) {
+function reduce({ time, state }: IReducerState, keysState: IKeysState) {
   const now = Date.now();
 
   return { time: now, state: movePlayer(state, keysState, now - time) };
