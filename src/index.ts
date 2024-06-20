@@ -1,5 +1,12 @@
-import { defer, interval, animationFrameScheduler, Subject, distinct } from 'rxjs';
-import { combineLatest, withLatestFrom, takeUntil, distinctUntilChanged } from 'rxjs/operators';
+import {
+  defer,
+  interval,
+  animationFrameScheduler,
+  Subject,
+  distinct,
+  combineLatestWith,
+} from 'rxjs';
+import { withLatestFrom, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { createKeysStream } from './game/keys';
 import { takeSecond } from './util/projection';
 import { createGameReducer } from './game/reducer';
@@ -65,7 +72,7 @@ generator$
         prev.state.player.position.y === next.state.player.position.y
       );
     }),
-    combineLatest(textureImage$),
+    combineLatestWith(textureImage$),
   )
   .subscribe(([{ time, state }, textureImage]) => {
     renderTransformed(transformedContext, state);
