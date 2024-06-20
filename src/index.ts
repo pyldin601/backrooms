@@ -55,7 +55,18 @@ const perspectiveContext = prepareCanvasAndGetContext(
 assert(perspectiveContext);
 
 generator$
-  .pipe(takeUntil(reload$), createGameReducer(), combineLatest(textureImage$))
+  .pipe(
+    takeUntil(reload$),
+    createGameReducer(),
+    distinctUntilChanged((prev, next) => {
+      return (
+        prev.state.player.position.angle === next.state.player.position.angle &&
+        prev.state.player.position.x === next.state.player.position.x &&
+        prev.state.player.position.y === next.state.player.position.y
+      );
+    }),
+    combineLatest(textureImage$),
+  )
   .subscribe(([{ time, state }, textureImage]) => {
     renderTransformed(transformedContext, state);
     renderPerspective(perspectiveContext, state, textureImage);
