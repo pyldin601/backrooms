@@ -85,7 +85,7 @@ export function renderColumn(
     const perspectiveHeight = heightScale * (currentSector.height / HEIGHT_RATIO);
 
     renderCeiling(context, camera, screenOffset, screenWidth, perspectiveHeight);
-    renderFloor(context, camera, screenOffset, screenWidth, perspectiveHeight);
+    renderFloor(context, textureImage, camera, screenOffset, screenWidth, perspectiveHeight);
 
     if (hasWallPortal(wall)) {
       const sectorAfterPortal = sectors[wall.portal.sectorId];
@@ -154,6 +154,7 @@ export function renderSector(
 
 export function renderFloor(
   context: CanvasRenderingContext2D,
+  textureImage: CanvasImageSource,
   camera: ICamera,
   screenOffset: number,
   screenWidth: number,
