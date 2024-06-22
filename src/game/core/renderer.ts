@@ -5,7 +5,7 @@ import {
   TEXTURE_TILE_WIDTH,
   TEXTURE_TILE_HEIGHT,
 } from '../../consts';
-import { crossTheWall } from './raycaster';
+import { crossTheWall, IRayCross } from './raycaster';
 import { darken } from './color';
 import { hasWallPortal, moveCameraInRelationToPortal } from './portal';
 import { getDistanceBetweenPoints } from '../../util/geometry';
@@ -65,72 +65,89 @@ export function renderColumn(
 ) {
   const currentSector = sectors[sectorId];
 
-  let nearestWall = Infinity;
+  let nearestRayCross: IRayCross | null = null;
+  let nearestWall: IWall | null = null;
 
   for (const wall of currentSector.walls) {
     const rayCross = crossTheWall(ray, wall);
+    const nearestWallDistance = nearestRayCross?.distance ?? Infinity;
 
     if (
       rayCross === null ||
-      rayCross.distance >= nearestWall ||
+      rayCross.distance >= nearestWallDistance ||
       rayCross.distance > RENDER_DISTANCE
     ) {
       continue;
     }
 
-    nearestWall = rayCross.distance;
+    nearestRayCross = rayCross;
+    nearestWall = wall;
+  }
 
-    const lensDistance = rayCross.distance * Math.cos(camera.angle - ray.angle);
-    const heightScale = PERSPECTIVE_HEIGHT / lensDistance;
-    const perspectiveHeight = heightScale * (currentSector.height / HEIGHT_RATIO);
+  if (!nearestRayCross || !nearestWall) {
+    return;
+  }
 
-    renderCeiling(context, camera, screenOffset, screenWidth, perspectiveHeight);
-    renderFloor(context, textureImage, camera, screenOffset, screenWidth, perspectiveHeight);
+  const lensDistance = nearestRayCross.distance * Math.cos(camera.angle - ray.angle);
+  const heightScale = PERSPECTIVE_HEIGHT / lensDistance;
+  const perspectiveHeight = heightScale * (currentSector.height / HEIGHT_RATIO);
 
-    if (hasWallPortal(wall)) {
-      const sectorAfterPortal = sectors[wall.portal.sectorId];
-      renderPortal(wall, sectors, ray, camera, screenOffset, screenWidth, context, textureImage);
-      if (sectorAfterPortal.height < currentSector.height) {
-        const portalPerspectiveHeight = heightScale * (sectorAfterPortal.height / HEIGHT_RATIO);
-        // render top and bottom parts of wall
-        context.save();
-        context.beginPath();
-        context.fillStyle = darken(wall.color, Math.sqrt(rayCross.distance) * 6);
-        context.fillRect(
-          screenOffset,
-          0,
-          screenWidth,
-          PERSPECTIVE_HEIGHT / 2 - portalPerspectiveHeight,
-        );
-        context.fillRect(
-          screenOffset,
-          PERSPECTIVE_HEIGHT / 2 + portalPerspectiveHeight,
-          screenWidth,
-          PERSPECTIVE_HEIGHT / 2 + perspectiveHeight,
-        );
-        context.closePath();
-        context.fill();
-        context.restore();
-      }
-    } else {
-      // Render wall
-      const wallLength = getDistanceBetweenPoints(wall.p1, wall.p2);
-      const textureOffset = TEXTURE_TILE_WIDTH * wall.texture;
-      const textureColumnOffset =
-        textureOffset + ((wallLength * TEXTURE_MAP_SCALE * rayCross.offset) % TEXTURE_TILE_WIDTH);
+  renderCeiling(context, camera, screenOffset, screenWidth, perspectiveHeight);
+  renderFloor(context, textureImage, camera, screenOffset, screenWidth, perspectiveHeight);
 
-      context.drawImage(
-        textureImage,
-        textureColumnOffset,
-        1,
-        1,
-        TEXTURE_TILE_HEIGHT,
+  if (hasWallPortal(nearestWall)) {
+    const sectorAfterPortal = sectors[nearestWall.portal.sectorId];
+    renderPortal(
+      nearestWall,
+      sectors,
+      ray,
+      camera,
+      screenOffset,
+      screenWidth,
+      context,
+      textureImage,
+    );
+    if (sectorAfterPortal.height < currentSector.height) {
+      const portalPerspectiveHeight = heightScale * (sectorAfterPortal.height / HEIGHT_RATIO);
+      // render top and bottom parts of wall
+      context.save();
+      context.beginPath();
+      context.fillStyle = darken(nearestWall.color, Math.sqrt(nearestRayCross.distance) * 6);
+      context.fillRect(
         screenOffset,
-        PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
-        1,
-        perspectiveHeight * 2,
+        0,
+        screenWidth,
+        PERSPECTIVE_HEIGHT / 2 - portalPerspectiveHeight,
       );
+      context.fillRect(
+        screenOffset,
+        PERSPECTIVE_HEIGHT / 2 + portalPerspectiveHeight,
+        screenWidth,
+        PERSPECTIVE_HEIGHT / 2 + perspectiveHeight,
+      );
+      context.closePath();
+      context.fill();
+      context.restore();
     }
+  } else {
+    // Render wall
+    const wallLength = getDistanceBetweenPoints(nearestWall.p1, nearestWall.p2);
+    const textureOffset = TEXTURE_TILE_WIDTH * nearestWall.texture;
+    const textureColumnOffset =
+      textureOffset +
+      ((wallLength * TEXTURE_MAP_SCALE * nearestRayCross.offset) % TEXTURE_TILE_WIDTH);
+
+    context.drawImage(
+      textureImage,
+      textureColumnOffset,
+      1,
+      1,
+      TEXTURE_TILE_HEIGHT,
+      screenOffset,
+      PERSPECTIVE_HEIGHT / 2 - perspectiveHeight,
+      1,
+      perspectiveHeight * 2,
+    );
   }
 }
 

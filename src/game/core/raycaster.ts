@@ -7,7 +7,12 @@ export function isWallInFrontIfCamera(wall: IWall, camera: ICamera | IRay) {
   return wall.p1.y <= camera.y && camera.y <= wall.p2.y;
 }
 
-export function crossTheWall(ray: IRay, wall: IWall) {
+export interface IRayCross {
+  distance: number;
+  offset: number;
+}
+
+export function crossTheWall(ray: IRay, wall: IWall): IRayCross | null {
   if (!isRayCentered(ray)) {
     return crossTheWall(centerRay(ray), rotateWall(wall, ray, -ray.angle));
   }
