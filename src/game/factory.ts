@@ -2,10 +2,17 @@ import { getRandomColor } from '../util/colors';
 import { IPortal, IWall } from '@/game/map-types';
 import { IPoint } from '@/game/geometry-types';
 
-export function sector(height: number, walls: readonly IWall[]) {
+export function sector(
+  height: number,
+  walls: readonly IWall[],
+  floorTexture: number = 0,
+  ceilingTexture: number = 0,
+) {
   return {
     height,
     walls,
+    floorTexture,
+    ceilingTexture,
   };
 }
 
