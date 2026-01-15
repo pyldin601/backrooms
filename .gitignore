@@ -1,5 +1,6 @@
 .idea
 .cache
+.parcel-cache
 dist
 build
 node_modules
