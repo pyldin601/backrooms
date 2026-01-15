@@ -69,11 +69,11 @@ export function movePlayer(
 }
 
 export function movePlayerThroughPortal(
-  playerPosition: ICamera,
+  playerPosition: IPlayerPosition,
   thisWall: IWall,
   thatWall: IWall,
   sectorIdBehindPortal: number,
-) {
+): IPlayerPosition {
   return {
     ...playerPosition,
     ...moveCameraInRelationToPortal(thisWall, thatWall, playerPosition),

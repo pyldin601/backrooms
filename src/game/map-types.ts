@@ -32,6 +32,8 @@ export interface IRay {
 export interface ISector {
   height: number;
   walls: readonly IWall[];
+  floorTexture: number;
+  ceilingTexture: number;
 }
 
 export interface IPlayerPosition {

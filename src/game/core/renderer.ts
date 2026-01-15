@@ -18,6 +18,9 @@ export const RENDER_DISTANCE = 4096;
 export const DEFAULT_CEILING_COLOR = '#009aff';
 export const DEFAULT_FLOOR_COLOR = '#2a2a2a';
 
+// Texture atlas layout: 6 columns of 64px tiles
+const TEXTURE_ATLAS_COLUMNS = 6;
+
 function renderPortal(
   wall: IWall,
   sectors: readonly ISector[],
@@ -134,6 +137,123 @@ export function renderColumn(
   }
 }
 
+// Get texture coordinates from texture index
+function getTextureOffset(textureIndex: number) {
+  const col = textureIndex % TEXTURE_ATLAS_COLUMNS;
+  const row = Math.floor(textureIndex / TEXTURE_ATLAS_COLUMNS);
+  return {
+    x: col * TEXTURE_TILE_WIDTH,
+    y: row * TEXTURE_TILE_HEIGHT,
+  };
+}
+
+// Render textured floor and ceiling for the entire sector
+export function renderFloorAndCeiling(
+  context: CanvasRenderingContext2D,
+  sector: ISector,
+  camera: ICamera,
+  textureImage: CanvasImageSource,
+) {
+  const horizon = PERSPECTIVE_HEIGHT / 2;
+  const playerHeight = sector.height / (2 * HEIGHT_RATIO);
+
+  const floorTextureOffset = getTextureOffset(sector.floorTexture);
+  const ceilingTextureOffset = getTextureOffset(sector.ceilingTexture);
+
+  // Create ImageData for pixel-level manipulation
+  const imageData = context.createImageData(PERSPECTIVE_WIDTH, PERSPECTIVE_HEIGHT);
+  const data = imageData.data;
+
+  // We need to read from the texture - create an offscreen canvas
+  const offscreen = document.createElement('canvas');
+  offscreen.width = (textureImage as HTMLImageElement).width || 384;
+  offscreen.height = (textureImage as HTMLImageElement).height || 64;
+  const offCtx = offscreen.getContext('2d')!;
+  offCtx.drawImage(textureImage, 0, 0);
+  const textureData = offCtx.getImageData(0, 0, offscreen.width, offscreen.height);
+  const texPixels = textureData.data;
+  const texWidth = textureData.width;
+
+  for (let screenX = 0; screenX < PERSPECTIVE_WIDTH; screenX++) {
+    // Calculate ray angle for this column
+    const biasedFraction = screenX / PERSPECTIVE_WIDTH - 0.5;
+    const rayAngle = Math.atan2(biasedFraction, FOCUS_LENGTH) + camera.angle;
+    const cosAngle = Math.cos(rayAngle);
+    const sinAngle = Math.sin(rayAngle);
+    const fisheyeCorrection = Math.cos(rayAngle - camera.angle);
+
+    // Render floor (bottom half)
+    for (let screenY = horizon + 1; screenY < PERSPECTIVE_HEIGHT; screenY++) {
+      const rowDistance = playerHeight / ((screenY - horizon) / PERSPECTIVE_HEIGHT);
+      const realDistance = rowDistance / fisheyeCorrection;
+
+      // Calculate world coordinates
+      const worldX = camera.x + realDistance * cosAngle;
+      const worldY = camera.y + realDistance * sinAngle;
+
+      // Calculate texture coordinates
+      const texX = Math.floor(
+        floorTextureOffset.x +
+          ((((worldX * TEXTURE_MAP_SCALE) % TEXTURE_TILE_WIDTH) + TEXTURE_TILE_WIDTH) %
+            TEXTURE_TILE_WIDTH),
+      );
+      const texY = Math.floor(
+        floorTextureOffset.y +
+          ((((worldY * TEXTURE_MAP_SCALE) % TEXTURE_TILE_HEIGHT) + TEXTURE_TILE_HEIGHT) %
+            TEXTURE_TILE_HEIGHT),
+      );
+
+      // Sample texture
+      const texIndex = (texY * texWidth + texX) * 4;
+      const pixelIndex = (screenY * PERSPECTIVE_WIDTH + screenX) * 4;
+
+      // Apply distance-based darkening
+      const darkenFactor = Math.max(0, 1 - realDistance / 150);
+
+      data[pixelIndex] = texPixels[texIndex] * darkenFactor;
+      data[pixelIndex + 1] = texPixels[texIndex + 1] * darkenFactor;
+      data[pixelIndex + 2] = texPixels[texIndex + 2] * darkenFactor;
+      data[pixelIndex + 3] = 255;
+    }
+
+    // Render ceiling (top half)
+    for (let screenY = 0; screenY < horizon; screenY++) {
+      const rowDistance = playerHeight / ((horizon - screenY) / PERSPECTIVE_HEIGHT);
+      const realDistance = rowDistance / fisheyeCorrection;
+
+      // Calculate world coordinates
+      const worldX = camera.x + realDistance * cosAngle;
+      const worldY = camera.y + realDistance * sinAngle;
+
+      // Calculate texture coordinates
+      const texX = Math.floor(
+        ceilingTextureOffset.x +
+          ((((worldX * TEXTURE_MAP_SCALE) % TEXTURE_TILE_WIDTH) + TEXTURE_TILE_WIDTH) %
+            TEXTURE_TILE_WIDTH),
+      );
+      const texY = Math.floor(
+        ceilingTextureOffset.y +
+          ((((worldY * TEXTURE_MAP_SCALE) % TEXTURE_TILE_HEIGHT) + TEXTURE_TILE_HEIGHT) %
+            TEXTURE_TILE_HEIGHT),
+      );
+
+      // Sample texture
+      const texIndex = (texY * texWidth + texX) * 4;
+      const pixelIndex = (screenY * PERSPECTIVE_WIDTH + screenX) * 4;
+
+      // Apply distance-based darkening
+      const darkenFactor = Math.max(0, 1 - realDistance / 150);
+
+      data[pixelIndex] = texPixels[texIndex] * darkenFactor;
+      data[pixelIndex + 1] = texPixels[texIndex + 1] * darkenFactor;
+      data[pixelIndex + 2] = texPixels[texIndex + 2] * darkenFactor;
+      data[pixelIndex + 3] = 255;
+    }
+  }
+
+  context.putImageData(imageData, 0, 0);
+}
+
 export function renderSector(
   context: CanvasRenderingContext2D,
   sectorId: number,
@@ -141,6 +261,12 @@ export function renderSector(
   camera: ICamera,
   textureImage: CanvasImageSource,
 ) {
+  const currentSector = sectors[sectorId];
+
+  // First pass: render textured floor and ceiling
+  renderFloorAndCeiling(context, currentSector, camera, textureImage);
+
+  // Second pass: render walls on top
   for (let i = 0; i < PERSPECTIVE_WIDTH; i += 1) {
     const biasedFraction = i / PERSPECTIVE_WIDTH - 0.5;
     const angle = Math.atan2(biasedFraction, FOCUS_LENGTH) + camera.angle;
@@ -159,13 +285,7 @@ export function renderFloor(
   screenWidth: number,
   perspectiveHeight: number,
 ) {
-  context.save();
-  context.beginPath();
-  context.fillStyle = DEFAULT_FLOOR_COLOR;
-  context.fillRect(screenOffset, PERSPECTIVE_HEIGHT / 2, screenWidth, PERSPECTIVE_HEIGHT / 2);
-  context.closePath();
-  context.fill();
-  context.restore();
+  // Now a no-op since floor is rendered in renderFloorAndCeiling
 }
 
 export function renderCeiling(
@@ -175,11 +295,5 @@ export function renderCeiling(
   screenWidth: number,
   perspectiveHeight: number,
 ) {
-  context.save();
-  context.beginPath();
-  context.fillStyle = DEFAULT_CEILING_COLOR;
-  context.fillRect(screenOffset, 0, screenWidth, PERSPECTIVE_HEIGHT / 2);
-  context.closePath();
-  context.fill();
-  context.restore();
+  // Now a no-op since ceiling is rendered in renderFloorAndCeiling
 }
