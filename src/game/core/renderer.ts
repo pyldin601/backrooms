@@ -155,7 +155,10 @@ export function renderFloorAndCeiling(
   textureImage: CanvasImageSource,
 ) {
   const horizon = PERSPECTIVE_HEIGHT / 2;
-  const playerHeight = sector.height / (2 * HEIGHT_RATIO);
+  // This must match the wall rendering formula: perspectiveHeight = (PERSPECTIVE_HEIGHT / distance) * (sector.height / HEIGHT_RATIO)
+  // Solving for distance: distance = PERSPECTIVE_HEIGHT * sector.height / (HEIGHT_RATIO * (screenY - horizon))
+  // Which simplifies to: distance = positionConstant / (screenY - horizon) where positionConstant = PERSPECTIVE_HEIGHT * sector.height / HEIGHT_RATIO
+  const positionConstant = (PERSPECTIVE_HEIGHT * sector.height) / HEIGHT_RATIO;
 
   const floorTextureOffset = getTextureOffset(sector.floorTexture);
   const ceilingTextureOffset = getTextureOffset(sector.ceilingTexture);
@@ -184,7 +187,8 @@ export function renderFloorAndCeiling(
 
     // Render floor (bottom half)
     for (let screenY = horizon + 1; screenY < PERSPECTIVE_HEIGHT; screenY++) {
-      const rowDistance = playerHeight / ((screenY - horizon) / PERSPECTIVE_HEIGHT);
+      // Calculate distance for this floor row (matches wall projection formula)
+      const rowDistance = positionConstant / (screenY - horizon);
       const realDistance = rowDistance / fisheyeCorrection;
 
       // Calculate world coordinates
@@ -218,7 +222,8 @@ export function renderFloorAndCeiling(
 
     // Render ceiling (top half)
     for (let screenY = 0; screenY < horizon; screenY++) {
-      const rowDistance = playerHeight / ((horizon - screenY) / PERSPECTIVE_HEIGHT);
+      // Calculate distance for this ceiling row (matches wall projection formula)
+      const rowDistance = positionConstant / (horizon - screenY);
       const realDistance = rowDistance / fisheyeCorrection;
 
       // Calculate world coordinates
